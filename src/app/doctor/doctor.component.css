@@ -1,0 +1,156 @@
+/* Base Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  color: #333;
+}
+
+/* Headings */
+h2 {
+  color: #2c3e50;
+  font-size: 24px;
+  margin-bottom: 25px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+h3 {
+  color: #3498db;
+  font-size: 20px;
+  margin: 25px 0 15px;
+}
+
+/* Messages */
+.error, .success {
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.error {
+  background-color: #ffebee;
+  color: #c62828;
+  border-left: 4px solid #c62828;
+}
+
+.success {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border-left: 4px solid #2e7d32;
+}
+
+/* Profile Section */
+.profile-section {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 6px;
+  margin-bottom: 25px;
+}
+
+.profile-section p {
+  margin: 10px 0;
+}
+
+.profile-section strong {
+  color: #2c3e50;
+  display: inline-block;
+  width: 120px;
+}
+
+/* Buttons */
+button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 10px;
+  transition: background-color 0.2s;
+}
+
+button:hover {
+  background-color: #2980b9;
+}
+
+/* Availability Section */
+.availability-section {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 6px;
+  margin-bottom: 25px;
+}
+
+.availability-group {
+  display: grid;
+  grid-template-columns: 80px 150px 80px 100px 80px 100px;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px dashed #ddd;
+}
+
+.availability-group:last-child {
+  border-bottom: none;
+}
+
+.availability-group label {
+  font-size: 14px;
+  color: #7f8c8d;
+}
+
+select, input[type="time"] {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+/* Appointments Section */
+.appointments-section {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 6px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+th, td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #f1f5f9;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+tr:hover {
+  background-color: #f5f9ff;
+}
+
+a {
+  color: #3498db;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* No Appointments Message */
+.no-appointments {
+  color: #7f8c8d;
+  font-style: italic;
+  padding: 15px 0;
+}

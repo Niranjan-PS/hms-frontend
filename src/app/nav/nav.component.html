@@ -1,0 +1,53 @@
+<mat-toolbar color="primary" class="main-toolbar">
+  <div class="container">
+    <div class="toolbar-content">
+      <div class="logo-section">
+        <a routerLink="/" class="logo-link">
+          <mat-icon class="logo-icon">local_hospital</mat-icon>
+          <span class="logo-text">HMS</span>
+        </a>
+      </div>
+
+      <div class="nav-links">
+        <ng-container *ngIf="authService.user$ | async as user">
+          <button mat-button routerLink="/patient" *ngIf="user.role === 'patient'" routerLinkActive="active-link">
+            <mat-icon>person</mat-icon>
+            <span>Patient Dashboard</span>
+          </button>
+          <button mat-button routerLink="/doctor" *ngIf="user.role === 'doctor'" routerLinkActive="active-link">
+            <mat-icon>medical_services</mat-icon>
+            <span>Doctor Dashboard</span>
+          </button>
+          <button mat-button routerLink="/admin" *ngIf="user.role === 'admin'" routerLinkActive="active-link">
+            <mat-icon>admin_panel_settings</mat-icon>
+            <span>Admin Dashboard</span>
+          </button>
+        </ng-container>
+      </div>
+
+      <div class="auth-actions">
+        <ng-container *ngIf="!authService.isLoggedIn()">
+          <button mat-button routerLink="/login">
+            <mat-icon>login</mat-icon>
+            <span>Login</span>
+          </button>
+          <button mat-raised-button color="accent" routerLink="/register">
+            <mat-icon>person_add</mat-icon>
+            <span>Register</span>
+          </button>
+        </ng-container>
+
+        <button mat-button *ngIf="authService.isLoggedIn()" (click)="logout()" class="logout-button">
+          <mat-icon>logout</mat-icon>
+          <span>Logout</span>
+        </button>
+
+        <!-- Emergency logout button with direct local logout -->
+        <button mat-icon-button *ngIf="authService.isLoggedIn()" (click)="handleLocalLogout()"
+                matTooltip="Emergency Logout" class="emergency-logout-button">
+          <mat-icon>power_settings_new</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</mat-toolbar>

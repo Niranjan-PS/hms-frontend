@@ -1,0 +1,79 @@
+
+ <div class="container mt-5">
+      <h2>Patient Profile</h2>
+      <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+      <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label for="dateOfBirth" class="form-label">Date of Birth</label>
+          <input type="date" class="form-control" id="dateOfBirth" formControlName="dateOfBirth" required>
+        </div>
+        <div class="mb-3">
+          <label for="gender" class="form-label">Gender</label>
+          <select class="form-control" id="gender" formControlName="gender" required>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="phone" class="form-label">Phone</label>
+          <input type="text" class="form-control" id="phone" formControlName="phone">
+        </div>
+        <div class="mb-3">
+          <label for="address" class="form-label">Address</label>
+          <input type="text" class="form-control" id="address" formControlName="address">
+        </div>
+        <div class="mb-3">
+          <h4>Medical History</h4>
+          <div formArrayName="medicalHistory">
+            <div *ngFor="let history of medicalHistory.controls; let i=index" [formGroupName]="i" class="border p-3 mb-2">
+              <div class="mb-3">
+                <label for="condition-{{i}}" class="form-label">Condition</label>
+                <input type="text" class="form-control" id="condition-{{i}}" formControlName="condition" required>
+              </div>
+              <div class="mb-3">
+                <label for="diagnosedAt-{{i}}" class="form-label">Diagnosed Date</label>
+                <input type="date" class="form-control" id="diagnosedAt-{{i}}" formControlName="diagnosedAt" required>
+              </div>
+              <div class="mb-3">
+                <label for="notes-{{i}}" class="form-label">Notes</label>
+                <textarea class="form-control" id="notes-{{i}}" formControlName="notes"></textarea>
+              </div>
+              <button type="button" class="btn btn-danger" (click)="removeHistory(i)">Remove</button>
+            </div>
+            <button type="button" class="btn btn-secondary" (click)="addHistory()">Add Medical History</button>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary" [disabled]="!profileForm.valid">Save Profile</button>
+      </form>
+      <!-- Appointments Section -->
+  <div class="appointments-section">
+    <h3>Your Appointments</h3>
+    <button (click)="navigateToCreateAppointment()">Book New Appointment</button>
+    <table *ngIf="appointments.length; else noAppointments">
+      <thead>
+        <tr>
+          <th>Doctor</th>
+          <th>Date</th>
+          <th>Reason</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let appt of appointments">
+          <td>{{ appt.doctor.user.name }}</td>
+          <td>{{ appt.date | date: 'medium' }}</td>
+          <td>{{ appt.reason }}</td>
+          <td>{{ appt.status }}</td>
+          <td>
+            <a [routerLink]="['/appointments', appt._id]" *ngIf="appt.status !== 'cancelled'">View/Edit</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <ng-template #noAppointments>
+      <p>No appointments scheduled.</p>
+    </ng-template>
+  </div>
+    </div>

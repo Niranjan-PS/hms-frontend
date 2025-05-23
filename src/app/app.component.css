@@ -1,0 +1,19 @@
+.app-content {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.with-nav {
+  padding-top: 64px; /* Height of the navbar */
+}
+
+.full-height {
+  min-height: 100vh;
+}
+
+@media (max-width: 768px) {
+  .with-nav {
+    padding-top: 56px; /* Smaller navbar height on mobile */
+  }
+}

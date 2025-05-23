@@ -1,0 +1,16 @@
+<mat-toolbar color="primary" class="dashboard-toolbar">
+  <span>Admin Dashboard</span>
+  <div class="dashboard-links">
+    <button mat-button routerLink="/admin/dashboard" routerLinkActive="active-link">
+      Dashboard
+    </button>
+    <button mat-button routerLink="/admin/patients" routerLinkActive="active-link">
+      Manage Patients
+    </button>
+    <button mat-button routerLink="/doctors" routerLinkActive="active-link">
+      Manage Doctors
+    </button>
+  </div>
+</mat-toolbar>
+
+<router-outlet></router-outlet>

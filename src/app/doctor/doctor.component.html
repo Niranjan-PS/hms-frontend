@@ -1,0 +1,68 @@
+
+<div class="container">
+  <h2>Doctor Dashboard</h2>
+  <div *ngIf="error" class="error">{{ error }}</div>
+  <div *ngIf="success" class="success">{{ success }}</div>
+
+  <div *ngIf="doctor" class="profile-section">
+    <h3>Profile</h3>
+    <p><strong>Name:</strong> {{ doctor.name }}</p>
+    <p><strong>Email:</strong> {{ doctor.email }}</p>
+    <p><strong>Phone:</strong> {{ doctor.phone }}</p>
+    <p><strong>Department:</strong> {{ doctor.department }}</p>
+    <p><strong>License Number:</strong> {{ doctor.licenseNumber }}</p>
+    <button (click)="editProfile()">Edit Profile</button>
+  </div>
+
+  <div class="availability-section">
+    <h3>Manage Availability</h3>
+    <form [formGroup]="availabilityForm" (ngSubmit)="onSubmitAvailability()">
+      <div formArrayName="availability">
+        <div *ngFor="let avail of availability.controls; let i=index" [formGroupName]="i" class="availability-group">
+          <label for="day-{{i}}">Day:</label>
+          <select id="day-{{i}}" formControlName="day" required>
+            <option value="">Select Day</option>
+            <option *ngFor="let day of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']" [value]="day">{{ day }}</option>
+          </select>
+          <label for="startTime-{{i}}">Start Time:</label>
+          <input id="startTime-{{i}}" formControlName="startTime" type="time" required />
+          <label for="endTime-{{i}}">End Time:</label>
+          <input id="endTime-{{i}}" formControlName="endTime" type="time" required />
+          <button type="button" (click)="removeAvailability(i)" *ngIf="availability.length > 1">Remove</button>
+        </div>
+        <button type="button" (click)="addAvailability()">Add Availability</button>
+      </div>
+      <button type="submit" [disabled]="availabilityForm.invalid">Update Availability</button>
+    </form>
+  </div>
+
+
+  <div class="appointments-section">
+    <h3>Appointments</h3>
+    <table *ngIf="appointments.length; else noAppointments">
+      <thead>
+        <tr>
+          <th>Patient</th>
+          <th>Date</th>
+          <th>Reason</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let appt of appointments">
+          <td>{{ appt.patient.name }}</td>
+          <td>{{ appt.date | date: 'medium' }}</td>
+          <td>{{ appt.reason }}</td>
+          <td>{{ appt.status }}</td>
+          <td>
+            <a [routerLink]="['/appointments', appt._id]" *ngIf="appt.status !== 'cancelled'">View/Edit</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <ng-template #noAppointments>
+      <p>No appointments scheduled.</p>
+    </ng-template>
+  </div>
+</div>

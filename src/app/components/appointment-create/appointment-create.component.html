@@ -1,0 +1,43 @@
+<div class="container">
+  <h2>Book Appointment</h2>
+  <div *ngIf="success" class="success">{{ success }}</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+  <option *ngFor="let doc of doctors" [value]="doc._id">{{ doc.name }} ({{ doc.specialization || doc.department }})</option>
+  <form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="doctor">Doctor:</label>
+      <select id="doctor" formControlName="doctor" required>
+        <option value="">Select Doctor</option>
+        <option *ngFor="let doc of doctors" [value]="doc._id">{{ doc.name }} ({{ doc.department }})</option>
+      </select>
+      <div *ngIf="appointmentForm.get('doctor')?.invalid && appointmentForm.get('doctor')?.touched" class="error">
+        Doctor is required
+      </div>
+    </div>
+
+     <div *ngIf="selectedDoctor && selectedDoctor.availability && selectedDoctor.availability.length > 0" class="availability">
+      <h4>Doctor's Availability:</h4>
+      <ul>
+        <li *ngFor="let slot of selectedDoctor.availability">
+          {{ slot.day }}: {{ slot.startTime }} to {{ slot.endTime }} (IST)
+        </li>
+      </ul>
+    </div>
+
+    <div class="form-group">
+      <label for="date">Date and Time:</label>
+      <input id="date" formControlName="date" type="datetime-local" required />
+      <div *ngIf="appointmentForm.get('date')?.invalid && appointmentForm.get('date')?.touched" class="error">
+        Date and time are required
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="reason">Reason:</label>
+      <textarea id="reason" formControlName="reason" required></textarea>
+      <div *ngIf="appointmentForm.get('reason')?.invalid && appointmentForm.get('reason')?.touched" class="error">
+        Reason is required
+      </div>
+    </div>
+    <button type="submit" [disabled]="appointmentForm.invalid">Book Appointment</button>
+  </form>
+</div>

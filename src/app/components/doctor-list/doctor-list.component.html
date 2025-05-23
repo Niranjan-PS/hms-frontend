@@ -1,0 +1,30 @@
+<div class="container">
+  <h2>Doctors</h2>
+  <div *ngIf="error" class="error">{{ error }}</div>
+  <button *ngIf="isAdmin" (click)="navigateToCreate()">Add New Doctor</button>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Department</th>
+        <th>Phone</th>
+        <th>License Number</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let doctor of doctors">
+        <td>{{ doctor.name }}</td>
+        <td>{{ doctor.email }}</td>
+        <td>{{ doctor.department }}</td>
+        <td>{{ doctor.phone }}</td>
+        <td>{{ doctor.licenseNumber }}</td>
+        <td>
+          <a [routerLink]="['/doctors', doctor._id]">View/Edit</a>
+          <button *ngIf="isAdmin" (click)="deleteDoctor(doctor._id!)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

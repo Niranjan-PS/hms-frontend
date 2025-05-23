@@ -1,0 +1,5 @@
+
+<app-nav *ngIf="authService.isLoggedIn()"></app-nav>
+<div [ngClass]="{'app-content': true, 'with-nav': authService.isLoggedIn(), 'full-height': !authService.isLoggedIn()}">
+  <router-outlet></router-outlet>
+</div>

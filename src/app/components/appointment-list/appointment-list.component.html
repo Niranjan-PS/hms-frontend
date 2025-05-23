@@ -1,0 +1,39 @@
+<div class="container">
+  <h2>Appointments</h2>
+  <div *ngIf="error" class="error">{{ error }}</div>
+  <button *ngIf="isPatient" (click)="navigateToCreate()">Book Appointment</button>
+  <table *ngIf="appointments.length; else noAppointments">
+    <thead>
+      <tr>
+        <th>Patient Name</th>
+      <th>Doctor Name</th>
+      <th>Department</th>
+      <th>Date</th>
+      <th>Reason</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let appointment of appointments">
+      <td>{{ appointment.patient.name || 'N/A' }}</td>
+      <td>{{ appointment.doctor.user.name || 'N/A' }}</td>
+      <td>{{ appointment.doctor.department || 'N/A' }}</td>
+      <td>{{ appointment.date | date:'medium' }}</td>
+      <td>{{ appointment.reason }}</td>
+      <td>{{ appointment.status }}</td>
+      <td>
+        <td>
+          <a [routerLink]="['/appointments', appointment._id]" *ngIf="appointment.status !== 'cancelled'">View/Edit</a>
+          <button
+            *ngIf="(isPatient || isAdmin) && appointment.status !== 'cancelled'"
+            (click)="cancelAppointment(appointment._id!)">
+            Cancel
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <ng-template #noAppointments>
+    <p>No appointments found.</p>
+  </ng-template>
+</div>

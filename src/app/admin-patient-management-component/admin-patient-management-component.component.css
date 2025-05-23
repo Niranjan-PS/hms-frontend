@@ -1,0 +1,134 @@
+/* Main dashboard container */
+.dashboard-container {
+  padding: 24px;
+  background-color: #f5f5f5;
+  min-height: calc(100vh - 64px);
+}
+
+/* Card styling for dashboard sections */
+.dashboard-card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+
+.dashboard-card-header {
+  background-color: #2196f3;
+  color: white;
+  padding: 16px 24px;
+}
+
+.dashboard-card-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.dashboard-card-content {
+  padding: 24px;
+}
+
+/* Error message styling */
+.error-message {
+  background-color: #ffebee;
+  color: #c62828;
+  padding: 12px 16px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  border-left: 4px solid #c62828;
+}
+
+/* Table container with elevation */
+.table-container {
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 16px;
+}
+
+/* Patient table styling */
+.patient-table {
+  width: 100%;
+}
+
+/* Table cell styling */
+.mat-cell, .mat-header-cell {
+  padding: 14px 16px;
+  text-align: left;
+}
+
+/* Header cell styling */
+.mat-header-cell {
+  background-color: #2196f3;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Row hover effect */
+.mat-row:hover {
+  background-color: #f5f9ff;
+}
+
+/* Center-align the Actions column */
+.mat-header-cell:last-child,
+.mat-cell:last-child {
+  text-align: center;
+}
+
+/* Spacing between action buttons */
+.mat-cell .mat-icon-button + .mat-icon-button {
+  margin-left: 12px;
+}
+
+/* No data message styling */
+.no-data-cell {
+  padding: 24px;
+  text-align: center;
+  font-style: italic;
+  color: #757575;
+}
+
+/* Add a subtle animation for table row appearance */
+.mat-row {
+  opacity: 0;
+  animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Stagger the animation for each row */
+.mat-row:nth-child(1) { animation-delay: 0.1s; }
+.mat-row:nth-child(2) { animation-delay: 0.2s; }
+.mat-row:nth-child(3) { animation-delay: 0.3s; }
+.mat-row:nth-child(4) { animation-delay: 0.4s; }
+.mat-row:nth-child(5) { animation-delay: 0.5s; }
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 16px;
+  }
+
+  .dashboard-card-header,
+  .dashboard-card-content {
+    padding: 16px;
+  }
+
+  .mat-cell, .mat-header-cell {
+    padding: 12px;
+    font-size: 13px;
+  }
+}

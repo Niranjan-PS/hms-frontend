@@ -1,0 +1,96 @@
+<div class="register-container">
+  <div class="register-card">
+    <div class="register-header">
+      <mat-icon class="register-icon">person_add</mat-icon>
+      <h1 class="register-title">Create an Account</h1>
+    </div>
+
+    <div class="register-content">
+      <form (ngSubmit)="onSubmit()" #registerForm="ngForm" class="register-form">
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Full Name</mat-label>
+          <input
+            matInput
+            type="text"
+            name="name"
+            [(ngModel)]="user.name"
+            required
+            #name="ngModel">
+          <mat-icon matPrefix>person</mat-icon>
+          <mat-error *ngIf="name.invalid && (name.dirty || name.touched)">
+            Name is required
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Email</mat-label>
+          <input
+            matInput
+            type="email"
+            name="email"
+            [(ngModel)]="user.email"
+            required
+            email
+            #email="ngModel">
+          <mat-icon matPrefix>email</mat-icon>
+          <mat-error *ngIf="email.invalid && (email.dirty || email.touched)">
+            Please enter a valid email address
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Password</mat-label>
+          <input
+            matInput
+            [type]="hidePassword ? 'password' : 'text'"
+            name="password"
+            [(ngModel)]="user.password"
+            required
+            #password="ngModel">
+          <mat-icon matPrefix>lock</mat-icon>
+          <button
+            mat-icon-button
+            matSuffix
+            (click)="hidePassword = !hidePassword"
+            [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hidePassword"
+            type="button">
+            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+          <mat-error *ngIf="password.invalid && (password.dirty || password.touched)">
+            Password is required
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Role</mat-label>
+          <mat-select name="role" [(ngModel)]="user.role" required #role="ngModel">
+            <mat-option value="patient">Patient</mat-option>
+            <mat-option value="doctor">Doctor</mat-option>
+            <mat-option value="admin">Admin</mat-option>
+          </mat-select>
+          <mat-icon matPrefix>assignment_ind</mat-icon>
+          <mat-error *ngIf="role.invalid && (role.dirty || role.touched)">
+            Please select a role
+          </mat-error>
+        </mat-form-field>
+
+        <div class="form-actions">
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            class="register-button"
+            [disabled]="registerForm.invalid">
+            Register
+          </button>
+        </div>
+      </form>
+
+      <div class="register-footer">
+        <p>Already have an account?</p>
+        <a mat-button color="accent" routerLink="/login">Login Now</a>
+      </div>
+    </div>
+  </div>
+</div>
