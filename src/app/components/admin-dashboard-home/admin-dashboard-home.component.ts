@@ -48,7 +48,7 @@ export class AdminDashboardHomeComponent implements OnInit {
   error: string | null = null;
 
   // API endpoints
-  private readonly API_BASE = 'http://localhost:3000/api';
+  private readonly API_BASE = 'http://localhost:5000/api';
   private readonly PATIENTS_API = `${this.API_BASE}/patients`;
   private readonly DOCTORS_API = `${this.API_BASE}/doctors`;
   private readonly APPOINTMENTS_API = `${this.API_BASE}/appointments`;
@@ -78,10 +78,10 @@ export class AdminDashboardHomeComponent implements OnInit {
 
     // Make parallel API calls to get all statistics
     forkJoin({
-      patients: this.http.get<any[]>(this.PATIENTS_API, { headers }).pipe(
+      patients: this.http.get<any>(this.PATIENTS_API, { headers }).pipe(
         catchError(error => {
           console.error('Error fetching patients:', error);
-          return of([]);
+          return of({ success: false, patients: [] });
         })
       ),
       doctors: this.http.get<any[]>(this.DOCTORS_API, { headers }).pipe(
@@ -90,20 +90,25 @@ export class AdminDashboardHomeComponent implements OnInit {
           return of([]);
         })
       ),
-      appointments: this.http.get<any[]>(this.APPOINTMENTS_API, { headers }).pipe(
+      appointments: this.http.get<any>(this.APPOINTMENTS_API, { headers }).pipe(
         catchError(error => {
           console.error('Error fetching appointments:', error);
-          return of([]);
+          return of({ success: false, appointments: [] });
         })
       )
     }).subscribe({
       next: (data) => {
         // Calculate statistics from the fetched data
+        // Handle different response formats from backend APIs
+        const patientsArray = data.patients.success ? data.patients.patients : [];
+        const doctorsArray = Array.isArray(data.doctors) ? data.doctors : [];
+        const appointmentsArray = data.appointments.success ? data.appointments.appointments : [];
+
         this.stats = {
-          totalPatients: data.patients.length,
-          totalDoctors: data.doctors.length,
-          totalAppointments: data.appointments.length,
-          pendingAppointments: this.calculatePendingAppointments(data.appointments)
+          totalPatients: patientsArray.length,
+          totalDoctors: doctorsArray.length,
+          totalAppointments: appointmentsArray.length,
+          pendingAppointments: this.calculatePendingAppointments(appointmentsArray)
         };
         this.loading = false;
         console.log('Dashboard stats loaded:', this.stats);

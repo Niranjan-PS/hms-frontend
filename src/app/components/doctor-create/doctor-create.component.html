@@ -1,66 +1,269 @@
-<div class="container">
-  <h2>Add New Doctor</h2>
-  <div *ngIf="success" class="success">{{ success }}</div>
-  <div *ngIf="error" class="error">{{ error }}</div>
-  <form [formGroup]="doctorForm" (ngSubmit)="onSubmit()">
-    <div class="form-group">
-      <label for="name">Name:</label>
-      <input id="name" formControlName="name" required />
-      <div *ngIf="doctorForm.get('name')?.invalid && doctorForm.get('name')?.touched" class="error">
-        Name is required
+<!-- Doctor Create Component -->
+<div class="doctor-create-container">
+
+  <!-- Back to Doctors Button -->
+  <div class="back-to-doctors-section">
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="navigateBack()"
+      class="back-to-doctors-btn"
+      matTooltip="Return to Doctors List">
+      <mat-icon>arrow_back</mat-icon>
+      <span>Back to Doctors</span>
+    </button>
+  </div>
+
+  <!-- Header Section -->
+  <mat-card class="header-card">
+    <mat-card-header class="header-content">
+      <div mat-card-avatar class="header-avatar">
+        <mat-icon class="header-icon">person_add</mat-icon>
       </div>
-    </div>
-    <div class="form-group">
-      <label for="email">Email:</label>
-      <input id="email" formControlName="email" type="email" required />
-      <div *ngIf="doctorForm.get('email')?.invalid && doctorForm.get('email')?.touched" class="error">
-        Valid email is required
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="password">Password:</label>
-      <input id="password" formControlName="password" type="password" required />
-      <div *ngIf="doctorForm.get('password')?.invalid && doctorForm.get('password')?.touched" class="error">
-        Password must be at least 6 characters
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="phone">Phone:</label>
-      <input id="phone" formControlName="phone" required />
-      <div *ngIf="doctorForm.get('phone')?.invalid && doctorForm.get('phone')?.touched" class="error">
-        Valid phone number is required
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="department">Department:</label>
-      <input id="department" formControlName="department" required />
-      <div *ngIf="doctorForm.get('department')?.invalid && doctorForm.get('department')?.touched" class="error">
-        Department is required
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="licenseNumber">License Number:</label>
-      <input id="licenseNumber" formControlName="licenseNumber" required />
-      <div *ngIf="doctorForm.get('licenseNumber')?.invalid && doctorForm.get('licenseNumber')?.touched" class="error">
-        License number is required
-      </div>
-    </div>
-    <div formArrayName="availability">
-      <h3>Availability</h3>
-      <div *ngFor="let avail of availability.controls; let i=index" [formGroupName]="i" class="availability-group">
-        <label for="day-{{i}}">Day:</label>
-        <select id="day-{{i}}" formControlName="day" required>
-          <option value="">Select Day</option>
-          <option *ngFor="let day of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']" [value]="day">{{ day }}</option>
-        </select>
-        <label for="startTime-{{i}}">Start Time:</label>
-        <input id="startTime-{{i}}" formControlName="startTime" type="time" required />
-        <label for="endTime-{{i}}">End Time:</label>
-        <input id="endTime-{{i}}" formControlName="endTime" type="time" required />
-        <button type="button" (click)="removeAvailability(i)" *ngIf="availability.length > 1">Remove</button>
-      </div>
-      <button type="button" (click)="addAvailability()">Add Availability</button>
-    </div>
-    <button type="submit" [disabled]="doctorForm.invalid">Create Doctor</button>
+      <mat-card-title class="header-title">Add New Doctor</mat-card-title>
+      <mat-card-subtitle class="header-subtitle">Register a new medical professional to the hospital system</mat-card-subtitle>
+    </mat-card-header>
+  </mat-card>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p class="loading-text">Creating doctor profile...</p>
+  </div>
+
+  <!-- Error Message -->
+  <mat-card *ngIf="error && !loading" class="error-card">
+    <mat-card-content class="error-content">
+      <mat-icon class="error-icon">error_outline</mat-icon>
+      <span class="error-text">{{ error }}</span>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Doctor Form -->
+  <form [formGroup]="doctorForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
+
+    <!-- Personal Information Card -->
+    <mat-card class="form-card">
+      <mat-card-header class="form-card-header">
+        <div mat-card-avatar class="form-card-avatar">
+          <mat-icon class="form-card-icon">person</mat-icon>
+        </div>
+        <mat-card-title class="form-card-title">Personal Information</mat-card-title>
+        <mat-card-subtitle class="form-card-subtitle">Basic details and contact information</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content class="form-card-content">
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Full Name</mat-label>
+            <input matInput formControlName="name" placeholder="Enter doctor's full name">
+            <mat-icon matSuffix>person</mat-icon>
+            <mat-error *ngIf="doctorForm.get('name')?.hasError('required')">
+              Full name is required
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Email Address</mat-label>
+            <input matInput formControlName="email" type="email" placeholder="doctor@hospital.com">
+            <mat-icon matSuffix>email</mat-icon>
+            <mat-error *ngIf="doctorForm.get('email')?.hasError('required')">
+              Email is required
+            </mat-error>
+            <mat-error *ngIf="doctorForm.get('email')?.hasError('email')">
+              Please enter a valid email address
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Phone Number</mat-label>
+            <input matInput formControlName="phone" placeholder="+1234567890">
+            <mat-icon matSuffix>phone</mat-icon>
+            <mat-error *ngIf="doctorForm.get('phone')?.hasError('required')">
+              Phone number is required
+            </mat-error>
+            <mat-error *ngIf="doctorForm.get('phone')?.hasError('pattern')">
+              Please enter a valid phone number
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Password</mat-label>
+            <input matInput formControlName="password" type="password" placeholder="Minimum 6 characters">
+            <mat-icon matSuffix>lock</mat-icon>
+            <mat-error *ngIf="doctorForm.get('password')?.hasError('required')">
+              Password is required
+            </mat-error>
+            <mat-error *ngIf="doctorForm.get('password')?.hasError('minlength')">
+              Password must be at least 6 characters long
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Professional Information Card -->
+    <mat-card class="form-card">
+      <mat-card-header class="form-card-header">
+        <div mat-card-avatar class="form-card-avatar">
+          <mat-icon class="form-card-icon">medical_services</mat-icon>
+        </div>
+        <mat-card-title class="form-card-title">Professional Information</mat-card-title>
+        <mat-card-subtitle class="form-card-subtitle">Department and licensing details</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content class="form-card-content">
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Department</mat-label>
+            <mat-select formControlName="department" placeholder="Select department">
+              <mat-option *ngFor="let dept of departments" [value]="dept">
+                {{ dept }}
+              </mat-option>
+            </mat-select>
+            <mat-icon matSuffix>business</mat-icon>
+            <mat-error *ngIf="doctorForm.get('department')?.hasError('required')">
+              Department is required
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>License Number</mat-label>
+            <input matInput formControlName="licenseNumber" placeholder="Medical license number">
+            <mat-icon matSuffix>verified</mat-icon>
+            <mat-error *ngIf="doctorForm.get('licenseNumber')?.hasError('required')">
+              License number is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Availability Schedule Card -->
+    <mat-card class="form-card">
+      <mat-card-header class="form-card-header">
+        <div mat-card-avatar class="form-card-avatar">
+          <mat-icon class="form-card-icon">schedule</mat-icon>
+        </div>
+        <mat-card-title class="form-card-title">Availability Schedule</mat-card-title>
+        <mat-card-subtitle class="form-card-subtitle">Set working hours and days</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content class="form-card-content">
+        <div formArrayName="availability">
+
+          <!-- Availability Entries -->
+          <div *ngFor="let avail of availability.controls; let i=index" [formGroupName]="i" class="availability-entry">
+            <div class="availability-form-row">
+              <mat-form-field appearance="outline" class="availability-field day-field">
+                <mat-label>Day</mat-label>
+                <mat-select formControlName="day" placeholder="Select day">
+                  <mat-option *ngFor="let day of availableDays" [value]="day">
+                    {{ day }}
+                  </mat-option>
+                </mat-select>
+                <mat-icon matSuffix>calendar_today</mat-icon>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="availability-field time-field">
+                <mat-label>Start Time</mat-label>
+                <input matInput formControlName="startTime" type="time">
+                <mat-icon matSuffix>access_time</mat-icon>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="availability-field time-field">
+                <mat-label>End Time</mat-label>
+                <input matInput formControlName="endTime" type="time">
+                <mat-icon matSuffix>access_time_filled</mat-icon>
+              </mat-form-field>
+
+              <button
+                mat-icon-button
+                color="warn"
+                type="button"
+                (click)="removeAvailability(i)"
+                *ngIf="availability.length > 1"
+                matTooltip="Remove this availability slot"
+                class="remove-availability-btn">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+
+            <!-- Availability Preview Chip -->
+            <div *ngIf="isAvailabilityComplete(i)" class="availability-preview">
+              <mat-chip class="availability-chip">
+                <mat-icon matChipAvatar>schedule</mat-icon>
+                {{ getAvailabilityDisplayText(i) }}
+              </mat-chip>
+            </div>
+          </div>
+
+          <!-- Add Availability Button -->
+          <div class="add-availability-section">
+            <button
+              mat-stroked-button
+              color="primary"
+              type="button"
+              (click)="addAvailability()"
+              class="add-availability-btn">
+              <mat-icon>add</mat-icon>
+              Add Another Time Slot
+            </button>
+          </div>
+
+          <!-- Availability Summary -->
+          <div *ngIf="availability.length > 0" class="availability-summary">
+            <mat-divider></mat-divider>
+            <h4 class="summary-title">
+              <mat-icon>schedule</mat-icon>
+              Schedule Summary
+            </h4>
+            <div class="summary-chips">
+              <mat-chip
+                *ngFor="let avail of availability.controls; let i=index"
+                [class.complete]="isAvailabilityComplete(i)"
+                [class.incomplete]="!isAvailabilityComplete(i)"
+                class="summary-chip">
+                <mat-icon matChipAvatar>
+                  {{ isAvailabilityComplete(i) ? 'check_circle' : 'schedule' }}
+                </mat-icon>
+                {{ isAvailabilityComplete(i) ? getAvailabilityDisplayText(i) : 'Incomplete slot ' + (i + 1) }}
+              </mat-chip>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Form Actions -->
+    <mat-card class="actions-card">
+      <mat-card-content class="actions-content">
+        <div class="form-actions">
+          <button
+            mat-stroked-button
+            type="button"
+            (click)="navigateBack()"
+            class="cancel-btn"
+            [disabled]="loading">
+            <mat-icon>cancel</mat-icon>
+            Cancel
+          </button>
+
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="doctorForm.invalid || loading"
+            class="submit-btn">
+            <mat-spinner diameter="20" *ngIf="loading" class="button-spinner"></mat-spinner>
+            <mat-icon *ngIf="!loading">person_add</mat-icon>
+            <span>{{ loading ? 'Creating...' : 'Create Doctor' }}</span>
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
   </form>
 </div>
