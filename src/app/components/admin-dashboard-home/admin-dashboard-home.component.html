@@ -1,0 +1,149 @@
+<!-- Admin Dashboard Home -->
+<div class="dashboard-home-container">
+
+  <!-- Welcome Header -->
+  <div class="welcome-section">
+    <mat-card class="welcome-card">
+      <mat-card-content class="welcome-content">
+        <div class="welcome-text">
+          <h1 class="welcome-title">Welcome back, {{ currentUser?.name || 'Administrator' }}!</h1>
+          <p class="welcome-subtitle">Hospital Management System - Admin Dashboard</p>
+        </div>
+        <div class="welcome-actions">
+          <button
+            mat-icon-button
+            (click)="refreshStats()"
+            matTooltip="Refresh Statistics"
+            class="refresh-btn"
+            [disabled]="loading">
+            <mat-icon [class.spinning]="loading">refresh</mat-icon>
+          </button>
+          <div class="welcome-icon">
+            <mat-icon class="admin-icon">admin_panel_settings</mat-icon>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="error && !loading" class="error-section">
+    <mat-card class="error-card">
+      <mat-card-content class="error-content">
+        <mat-icon class="error-icon">error_outline</mat-icon>
+        <span class="error-text">{{ error }}</span>
+        <button mat-flat-button color="primary" (click)="refreshStats()" class="retry-btn">
+          <mat-icon>refresh</mat-icon>
+          <span>Retry</span>
+        </button>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Statistics Cards -->
+  <div class="stats-section" *ngIf="!error">
+    <div class="stats-grid">
+
+      <!-- Total Patients Card -->
+      <mat-card class="stat-card patients-card" (click)="!loading && navigateToPatients()" [class.disabled]="loading">
+        <mat-card-content class="stat-content">
+          <div class="stat-icon-container">
+            <mat-icon class="stat-icon">people</mat-icon>
+          </div>
+          <div class="stat-details">
+            <h3 class="stat-number">
+              <span *ngIf="!loading">{{ stats.totalPatients }}</span>
+              <span *ngIf="loading" class="loading-text">Loading...</span>
+            </h3>
+            <p class="stat-label">Total Patients</p>
+          </div>
+          <mat-progress-bar *ngIf="loading" mode="indeterminate" class="stat-loader"></mat-progress-bar>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Total Doctors Card -->
+      <mat-card class="stat-card doctors-card" (click)="!loading && navigateToDoctors()" [class.disabled]="loading">
+        <mat-card-content class="stat-content">
+          <div class="stat-icon-container">
+            <mat-icon class="stat-icon">medical_services</mat-icon>
+          </div>
+          <div class="stat-details">
+            <h3 class="stat-number">
+              <span *ngIf="!loading">{{ stats.totalDoctors }}</span>
+              <span *ngIf="loading" class="loading-text">Loading...</span>
+            </h3>
+            <p class="stat-label">Total Doctors</p>
+          </div>
+          <mat-progress-bar *ngIf="loading" mode="indeterminate" class="stat-loader"></mat-progress-bar>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Total Appointments Card -->
+      <mat-card class="stat-card appointments-card" (click)="!loading && navigateToAppointments()" [class.disabled]="loading">
+        <mat-card-content class="stat-content">
+          <div class="stat-icon-container">
+            <mat-icon class="stat-icon">event</mat-icon>
+          </div>
+          <div class="stat-details">
+            <h3 class="stat-number">
+              <span *ngIf="!loading">{{ stats.totalAppointments }}</span>
+              <span *ngIf="loading" class="loading-text">Loading...</span>
+            </h3>
+            <p class="stat-label">Total Appointments</p>
+          </div>
+          <mat-progress-bar *ngIf="loading" mode="indeterminate" class="stat-loader"></mat-progress-bar>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Pending Appointments Card -->
+      <mat-card class="stat-card pending-card" (click)="!loading && navigateToAppointments()" [class.disabled]="loading">
+        <mat-card-content class="stat-content">
+          <div class="stat-icon-container">
+            <mat-icon class="stat-icon">schedule</mat-icon>
+          </div>
+          <div class="stat-details">
+            <h3 class="stat-number">
+              <span *ngIf="!loading">{{ stats.pendingAppointments }}</span>
+              <span *ngIf="loading" class="loading-text">Loading...</span>
+            </h3>
+            <p class="stat-label">Pending Appointments</p>
+          </div>
+          <mat-progress-bar *ngIf="loading" mode="indeterminate" class="stat-loader"></mat-progress-bar>
+        </mat-card-content>
+      </mat-card>
+
+    </div>
+  </div>
+
+  <!-- Quick Actions Section -->
+  <div class="actions-section">
+    <mat-card class="actions-card">
+      <mat-card-header class="actions-header">
+        <mat-card-title class="actions-title">Quick Actions</mat-card-title>
+        <mat-card-subtitle class="actions-subtitle">Frequently used administrative tasks</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content class="actions-content">
+        <div class="actions-grid">
+
+          <button mat-flat-button color="primary" class="action-btn" (click)="navigateToPatients()">
+            <mat-icon>person_add</mat-icon>
+            <span>Manage Patients</span>
+          </button>
+
+          <button mat-flat-button color="accent" class="action-btn" (click)="navigateToDoctors()">
+            <mat-icon>medical_services</mat-icon>
+            <span>Manage Doctors</span>
+          </button>
+
+          <button mat-flat-button color="warn" class="action-btn" (click)="navigateToAppointments()">
+            <mat-icon>event_note</mat-icon>
+            <span>View Appointments</span>
+          </button>
+
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+</div>

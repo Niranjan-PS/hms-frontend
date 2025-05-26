@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 export interface Doctor {
   _id?: string;
-  user?: string;
+  user?: string | { _id: string; name: string; email: string; role: string };
   name: string;
   email: string;
   phone: string;
@@ -34,7 +34,7 @@ export class DoctorService {
     return this.http.post<Doctor>(this.apiUrl, doctor,{
        headers: this.getAuthHeaders(),
     });
-    
+
   }
 
   getAllDoctors(): Observable<Doctor[]> {
@@ -57,6 +57,13 @@ export class DoctorService {
 
   deleteDoctor(id: string): Observable<{ message: string }> {
     return this.http.delete<{ message: string }>(`${this.apiUrl}/${id}`, {
+      headers: this.getAuthHeaders(),
+    });
+  }
+
+  // Get current doctor by user ID
+  getCurrentDoctor(): Observable<Doctor> {
+    return this.http.get<Doctor>(`${this.apiUrl}/current`, {
       headers: this.getAuthHeaders(),
     });
   }

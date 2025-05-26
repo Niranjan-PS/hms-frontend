@@ -1,113 +1,45 @@
-.dashboard-container {
-  padding: 24px;
-  background-color: #f5f7fa;
-  min-height: calc(100vh - 64px);
-}
+/* ===== HMS PATIENT PORTAL ===== */
 
-.dashboard-header {
-  margin-bottom: 32px;
-  text-align: center;
-  padding: 24px;
-  background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
-  color: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-}
-
-.dashboard-title {
-  margin: 0 0 8px 0;
-  font-size: 32px;
-  font-weight: 500;
-  letter-spacing: 0.5px;
-}
-
-.dashboard-subtitle {
-  margin: 0;
-  font-size: 18px;
-  opacity: 0.9;
-}
-
-.dashboard-content {
-  margin-bottom: 32px;
-}
-
-.dashboard-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 24px;
-}
-
-.dashboard-card {
-  height: 100%;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.dashboard-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-}
-
-mat-card-header {
-  background-color: #f5f7fa;
-  padding: 16px;
-  border-bottom: 1px solid #e0e0e0;
-}
-
-mat-card-title {
-  font-size: 20px;
-  font-weight: 500;
-  margin-bottom: 4px;
-  color: #2196f3;
-}
-
-mat-card-subtitle {
-  color: #757575;
-}
-
-mat-card-content {
-  padding: 16px;
-  color: #333;
-}
-
-mat-card-actions {
-  padding: 16px;
+/* Main Container */
+.patient-dashboard-container {
   display: flex;
-  gap: 8px;
-  justify-content: flex-start;
-  border-top: 1px solid #e0e0e0;
+  flex-direction: column;
+  min-height: calc(100vh - 64px); /* Account for main nav height */
+  background: transparent;
+  font-family: 'Roboto', 'Helvetica Neue', sans-serif;
+  padding: 0;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .dashboard-container {
-    padding: 16px;
-  }
+/* ===== CONTENT AREA ===== */
+.patient-content {
+  flex: 1;
+  padding: 0;
+  max-width: 100%;
+  margin: 0;
+  width: 100%;
+  background: transparent;
+}
 
-  .dashboard-header {
-    padding: 16px;
-    margin-bottom: 24px;
-  }
+/* ===== CONTENT WRAPPER ===== */
+.content-wrapper {
+  background: transparent;
+  min-height: calc(100vh - 64px); /* Account for nav */
+  padding: 0;
+  margin: 0;
+}
 
-  .dashboard-title {
-    font-size: 24px;
+/* ===== ANIMATIONS ===== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
   }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
-  .dashboard-subtitle {
-    font-size: 16px;
-  }
-
-  .dashboard-cards {
-    grid-template-columns: 1fr;
-  }
-
-  mat-card-actions {
-    flex-direction: column;
-  }
-
-  button {
-    width: 100%;
-  }
+.content-wrapper {
+  animation: fadeInUp 0.6s ease forwards;
 }

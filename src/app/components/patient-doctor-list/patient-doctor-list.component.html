@@ -1,0 +1,203 @@
+<div class="patient-doctors-container">
+
+  <!-- Back to Dashboard Button -->
+  <div class="back-to-dashboard-section">
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="goBackToDashboard()"
+      class="back-to-dashboard-btn"
+      matTooltip="Return to Patient Dashboard">
+      <mat-icon>arrow_back</mat-icon>
+      <span>Back to Dashboard</span>
+    </button>
+  </div>
+
+  <!-- Header Section -->
+  <mat-card class="header-card">
+    <mat-card-header class="header-content">
+      <div mat-card-avatar class="header-avatar">
+        <mat-icon class="header-icon">medical_services</mat-icon>
+      </div>
+      <mat-card-title class="header-title">Find a Doctor</mat-card-title>
+      <mat-card-subtitle class="header-subtitle">Browse our medical professionals and their availability</mat-card-subtitle>
+
+      <div class="header-actions">
+        <button
+          mat-icon-button
+          (click)="loadDoctors()"
+          [disabled]="loading"
+          matTooltip="Refresh List"
+          class="refresh-btn">
+          <mat-icon>refresh</mat-icon>
+        </button>
+      </div>
+    </mat-card-header>
+  </mat-card>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p class="loading-text">Loading doctors...</p>
+  </div>
+
+  <!-- Error Message -->
+  <mat-card *ngIf="error && !loading" class="error-card">
+    <mat-card-content class="error-content">
+      <mat-icon class="error-icon">error_outline</mat-icon>
+      <span class="error-text">{{ error }}</span>
+      <button mat-button color="primary" (click)="loadDoctors()" class="retry-btn">
+        <mat-icon>refresh</mat-icon>
+        Retry
+      </button>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Doctors Table -->
+  <mat-card class="table-card" *ngIf="!loading && !error">
+    <mat-card-content class="table-content">
+      <div class="table-container">
+        <table mat-table [dataSource]="doctors" class="doctors-table mat-elevation-z2">
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef class="header-cell">
+              <mat-icon class="column-icon">person</mat-icon>
+              Doctor Name
+            </th>
+            <td mat-cell *matCellDef="let doctor" class="name-cell">
+              <div class="doctor-info">
+                <div class="doctor-avatar">
+                  <mat-icon>account_circle</mat-icon>
+                </div>
+                <div class="doctor-details">
+                  <span class="doctor-name">Dr. {{ doctor.name }}</span>
+                  <span class="doctor-title">{{ doctor.specialization || 'Medical Doctor' }}</span>
+                </div>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Department Column -->
+          <ng-container matColumnDef="department">
+            <th mat-header-cell *matHeaderCellDef class="header-cell">
+              <mat-icon class="column-icon">business</mat-icon>
+              Department
+            </th>
+            <td mat-cell *matCellDef="let doctor" class="department-cell">
+              <mat-chip class="department-chip">
+                <mat-icon matChipAvatar>local_hospital</mat-icon>
+                {{ doctor.department }}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Availability Column -->
+          <ng-container matColumnDef="availability">
+            <th mat-header-cell *matHeaderCellDef class="header-cell">
+              <mat-icon class="column-icon">schedule</mat-icon>
+              Availability
+            </th>
+            <td mat-cell *matCellDef="let doctor" class="availability-cell">
+              <div class="availability-info">
+                <div *ngIf="hasAvailability(doctor); else noAvailability" class="availability-slots">
+                  <div *ngFor="let slot of doctor.availability" class="availability-slot">
+                    <mat-chip class="availability-chip">
+                      <mat-icon matChipAvatar>access_time</mat-icon>
+                      {{ slot.day }}: {{ formatTime(slot.startTime) }} - {{ formatTime(slot.endTime) }}
+                    </mat-chip>
+                  </div>
+                </div>
+                <ng-template #noAvailability>
+                  <span class="no-availability">No availability set</span>
+                </ng-template>
+
+                <!-- Book Appointment Button -->
+                <div class="appointment-action" *ngIf="hasAvailability(doctor)">
+                  <button
+                    mat-raised-button
+                    color="primary"
+                    (click)="bookAppointment(doctor)"
+                    class="book-appointment-btn">
+                    <mat-icon>event</mat-icon>
+                    Book Appointment
+                  </button>
+                </div>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Table Headers and Rows -->
+          <tr mat-header-row *matHeaderRowDef="displayedColumns" class="header-row"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="data-row"></tr>
+
+          <!-- No Data Row -->
+          <tr class="mat-row no-data-row" *matNoDataRow>
+            <td class="mat-cell no-data-cell" [attr.colspan]="displayedColumns.length">
+              <div class="no-data-content">
+                <mat-icon class="no-data-icon">person_off</mat-icon>
+                <h3>No Doctors Available</h3>
+                <p>There are currently no doctors available for appointments.</p>
+                <button
+                  mat-raised-button
+                  color="primary"
+                  (click)="goBackToDashboard()"
+                  class="back-to-dashboard-btn">
+                  <mat-icon>arrow_back</mat-icon>
+                  Back to Dashboard
+                </button>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Statistics Card -->
+  <mat-card class="stats-card" *ngIf="!loading && !error && getTotalDoctorsCount() > 0">
+    <mat-card-content class="stats-content">
+      <div class="stat-item">
+        <mat-icon class="stat-icon">people</mat-icon>
+        <div class="stat-details">
+          <span class="stat-number">{{ getTotalDoctorsCount() }}</span>
+          <span class="stat-label">Available Doctors</span>
+        </div>
+      </div>
+
+      <mat-divider vertical></mat-divider>
+
+      <div class="stat-item">
+        <mat-icon class="stat-icon">business</mat-icon>
+        <div class="stat-details">
+          <span class="stat-number">{{ getDepartmentCount() }}</span>
+          <span class="stat-label">Departments</span>
+        </div>
+      </div>
+
+      <mat-divider vertical></mat-divider>
+
+      <div class="stat-item">
+        <mat-icon class="stat-icon">schedule</mat-icon>
+        <div class="stat-details">
+          <span class="stat-number">{{ getAvailableDoctorsCount() }}</span>
+          <span class="stat-label">With Availability</span>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Help Section -->
+  <mat-card class="help-card" *ngIf="!loading && !error">
+    <mat-card-content class="help-content">
+      <div class="help-info">
+        <mat-icon class="help-icon">info</mat-icon>
+        <div class="help-text">
+          <h4>How to Book an Appointment</h4>
+          <p>Click the "Book Appointment" button next to any doctor to schedule your visit. You can view their availability times and select a suitable slot.</p>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+</div>

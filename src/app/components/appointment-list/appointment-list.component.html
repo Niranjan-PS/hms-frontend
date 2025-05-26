@@ -1,39 +1,134 @@
-<div class="container">
-  <h2>Appointments</h2>
-  <div *ngIf="error" class="error">{{ error }}</div>
-  <button *ngIf="isPatient" (click)="navigateToCreate()">Book Appointment</button>
-  <table *ngIf="appointments.length; else noAppointments">
-    <thead>
-      <tr>
-        <th>Patient Name</th>
-      <th>Doctor Name</th>
-      <th>Department</th>
-      <th>Date</th>
-      <th>Reason</th>
-      <th>Status</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let appointment of appointments">
-      <td>{{ appointment.patient.name || 'N/A' }}</td>
-      <td>{{ appointment.doctor.user.name || 'N/A' }}</td>
-      <td>{{ appointment.doctor.department || 'N/A' }}</td>
-      <td>{{ appointment.date | date:'medium' }}</td>
-      <td>{{ appointment.reason }}</td>
-      <td>{{ appointment.status }}</td>
-      <td>
-        <td>
-          <a [routerLink]="['/appointments', appointment._id]" *ngIf="appointment.status !== 'cancelled'">View/Edit</a>
+
+<div class="appointments-container">
+  <div class="appointments-header">
+    <h1 class="appointments-title">My Appointments</h1>
+    <div class="header-actions">
+      <button
+        mat-icon-button
+        (click)="refreshAppointments()"
+        [disabled]="loading"
+        matTooltip="Refresh Appointments"
+        class="refresh-button">
+        <mat-icon>refresh</mat-icon>
+      </button>
+      <button
+        mat-raised-button
+        color="primary"
+        *ngIf="isPatient"
+        (click)="navigateToCreate()"
+        class="book-button">
+        <mat-icon>add</mat-icon>
+        Book New Appointment
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading spinner -->
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Loading appointments...</p>
+  </div>
+
+  <!-- Error message -->
+  <div *ngIf="error && !loading" class="error-message">
+    <mat-icon>error</mat-icon>
+    <span>{{ error }}</span>
+  </div>
+
+  <!-- Appointments table -->
+  <div class="table-container mat-elevation-z8" *ngIf="appointments.length && !loading">
+    <table mat-table [dataSource]="appointments" class="appointments-table">
+
+      <!-- Patient Column -->
+      <ng-container matColumnDef="patient">
+        <th mat-header-cell *matHeaderCellDef>Patient</th>
+        <td mat-cell *matCellDef="let appointment">{{ getPatientName(appointment) }}</td>
+      </ng-container>
+
+      <!-- Doctor Column -->
+      <ng-container matColumnDef="doctor">
+        <th mat-header-cell *matHeaderCellDef>Doctor</th>
+        <td mat-cell *matCellDef="let appointment">{{ getDoctorName(appointment) }}</td>
+      </ng-container>
+
+      <!-- Department Column -->
+      <ng-container matColumnDef="department">
+        <th mat-header-cell *matHeaderCellDef>Department</th>
+        <td mat-cell *matCellDef="let appointment">{{ appointment.doctor.department || 'N/A' }}</td>
+      </ng-container>
+
+      <!-- Date Column -->
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef>Date & Time</th>
+        <td mat-cell *matCellDef="let appointment" [class.past-appointment]="isPastAppointment(appointment.date)">
+          {{ appointment.date | date:'medium' }}
+        </td>
+      </ng-container>
+
+      <!-- Reason Column -->
+      <ng-container matColumnDef="reason">
+        <th mat-header-cell *matHeaderCellDef>Reason</th>
+        <td mat-cell *matCellDef="let appointment">{{ appointment.reason }}</td>
+      </ng-container>
+
+      <!-- Status Column -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let appointment">
+          <span class="status-chip" [ngClass]="getStatusClass(appointment.status)">
+            {{ appointment.status | titlecase }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let appointment">
           <button
+            mat-icon-button
+            color="primary"
+            [routerLink]="['/appointments', appointment._id]"
+            *ngIf="appointment.status !== 'cancelled'"
+            matTooltip="View Details">
+            <mat-icon>visibility</mat-icon>
+          </button>
+
+          <button
+            mat-icon-button
+            color="warn"
             *ngIf="(isPatient || isAdmin) && appointment.status !== 'cancelled'"
-            (click)="cancelAppointment(appointment._id!)">
-            Cancel
+            (click)="cancelAppointment(appointment._id)"
+            matTooltip="Cancel Appointment">
+            <mat-icon>cancel</mat-icon>
           </button>
         </td>
+      </ng-container>
+
+      <!-- Table setup -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+      <!-- No data row -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell no-data-cell" [attr.colspan]="displayedColumns.length">
+          No appointments found
+        </td>
       </tr>
-    </tbody>
-  </table>
-  <ng-template #noAppointments>
-    <p>No appointments found.</p>
-  </ng-template>
+    </table>
+  </div>
+
+  <!-- No appointments message -->
+  <div *ngIf="!appointments.length && !loading && !error" class="no-appointments">
+    <mat-icon class="no-data-icon">event_busy</mat-icon>
+    <h2>No Appointments Found</h2>
+    <p>You don't have any appointments scheduled.</p>
+    <button
+      mat-raised-button
+      color="primary"
+      *ngIf="isPatient"
+      (click)="navigateToCreate()">
+      Book Your First Appointment
+    </button>
+  </div>
 </div>

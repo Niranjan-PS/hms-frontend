@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 
 import { Patient } from './patient';
 import { AuthService } from './auth.service';
@@ -33,7 +33,39 @@ export class PatientService {
 
   // Get patient profile by ID
   getPatient(id: string): Observable<Patient> {
-    return this.http.get<Patient>(`${this.apiUrl}/${id}`,{headers: this.getAuthHeaders(),});
+    console.log('PatientService - Getting patient:', id);
+
+    if (!id) {
+      return throwError(() => new Error('Patient ID is required'));
+    }
+
+    return this.http.get<Patient>(`${this.apiUrl}/${id}`, {
+      headers: this.getAuthHeaders(),
+    }).pipe(
+      map(patient => {
+        console.log('PatientService - Patient response:', patient);
+        return patient;
+      }),
+      catchError((error: HttpErrorResponse) => {
+        console.error('PatientService - Error getting patient:', error);
+
+        let errorMessage = 'Failed to load patient details';
+
+        if (error.status === 404) {
+          errorMessage = 'Patient not found';
+        } else if (error.status === 403) {
+          errorMessage = 'You are not authorized to view this patient profile';
+        } else if (error.status === 500) {
+          errorMessage = error.error?.message || 'Server error occurred while loading patient details';
+        } else if (error.status === 0) {
+          errorMessage = 'Unable to connect to server. Please check your internet connection.';
+        } else {
+          errorMessage = error.error?.message || error.message || 'Failed to load patient details';
+        }
+
+        return throwError(() => new Error(errorMessage));
+      })
+    );
   }
 
   // Get all patients (admin only)
@@ -45,6 +77,8 @@ export class PatientService {
       map(response => response.patients)
     );
   }
+
+
 
   // Update patient profile
   updatePatient(id: string, patient: Partial<Patient>): Observable<Patient> {
@@ -64,8 +98,8 @@ export class PatientService {
 
   // Get current patient's profile
   getCurrentPatient(): Observable<Patient> {
-    const user = this.authService.getCurrentUser();
-    if (!user) throw new Error('No user logged in');
-    return this.getPatient(user._id);
+    return this.http.get<Patient>(`${this.apiUrl}/current`, {
+      headers: this.getAuthHeaders()
+    });
   }
 }

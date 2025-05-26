@@ -1,78 +1,117 @@
-/* Main dashboard container */
-.dashboard-container {
+/* ===== HMS ADMIN PORTAL DASHBOARD ===== */
+
+/* Main Container */
+.admin-dashboard-container {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  min-height: calc(100vh - 64px); /* Account for main nav height */
+  background: linear-gradient(135deg, #121315 0%, #c3cfe2 100%);
+  font-family: 'Roboto', 'Helvetica Neue', sans-serif;
+  padding: 0;
 }
 
-/* Toolbar styling */
-.dashboard-toolbar {
-  height: 64px;
-  background-color: #3f51b5;
+/* ===== CONTENT AREA ===== */
+.admin-content {
+  flex: 1;
+  padding: 0;
+  max-width: 100%;
+  margin: 0;
+  width: 100%;
+  background: transparent;
+}
+
+/* ===== CONTENT WRAPPER ===== */
+.content-wrapper {
+  background: transparent;
+  min-height: calc(100vh - 64px - 80px); /* Account for nav and footer */
+  padding: 0;
+  margin: 0;
+}
+
+/* ===== FOOTER STYLES ===== */
+.admin-footer {
+  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
   color: white;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 24px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px 0;
+  margin-top: auto;
 }
 
-/* Navigation links container */
-.dashboard-links {
+.footer-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.footer-info {
   display: flex;
   align-items: center;
   gap: 16px;
 }
 
-/* Active link styling */
-.dashboard-links a.active-link {
-  background-color: rgba(255, 255, 255, 0.2);
-  border-bottom: 2px solid #ffffff;
+.footer-text,
+.footer-version {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
 }
 
-/* Content area */
-.dashboard-content {
-  padding: 24px;
-  background-color: #f5f5f5;
-  flex: 1;
+.footer-links {
+  display: flex;
+  gap: 8px;
 }
 
-/* Card styling for dashboard sections */
-.dashboard-card {
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  margin-bottom: 24px;
-  overflow: hidden;
+.footer-link {
+  color: rgba(255, 255, 255, 0.7) !important;
+  font-size: 12px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
 }
 
-.dashboard-card-header {
-  background-color: #2196f3;
-  color: white;
-  padding: 16px 24px;
+.footer-link:hover {
+  color: white !important;
+  background: rgba(255, 255, 255, 0.1) !important;
 }
 
-.dashboard-card-content {
-  padding: 24px;
-}
-
-/* Responsive adjustments */
+/* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 768px) {
-  .dashboard-toolbar {
-    padding: 0 16px;
+  .footer-content {
     flex-direction: column;
-    height: auto;
-    padding: 12px 16px;
+    gap: 16px;
+    text-align: center;
   }
-  
-  .dashboard-links {
-    margin-top: 12px;
-    gap: 8px;
-    flex-wrap: wrap;
-    justify-content: center;
+}
+
+@media (max-width: 480px) {
+  .footer-content {
+    padding: 0 16px;
   }
-  
-  .dashboard-content {
-    padding: 16px;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.content-wrapper {
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+  .admin-footer {
+    display: none;
+  }
+
+  .admin-dashboard-container {
+    background: white;
   }
 }

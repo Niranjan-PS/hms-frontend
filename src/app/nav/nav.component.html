@@ -18,10 +18,30 @@
             <mat-icon>medical_services</mat-icon>
             <span>Doctor Dashboard</span>
           </button>
-          <button mat-button routerLink="/admin" *ngIf="user.role === 'admin'" routerLinkActive="active-link">
-            <mat-icon>admin_panel_settings</mat-icon>
-            <span>Admin Dashboard</span>
-          </button>
+
+          <!-- Enhanced Admin Navigation -->
+          <ng-container *ngIf="user.role === 'admin'">
+            <div class="admin-nav-section">
+              <span class="admin-label">
+                <mat-icon>admin_panel_settings</mat-icon>
+                <span>Admin Portal</span>
+              </span>
+              <div class="admin-nav-buttons">
+                <button mat-button routerLink="/admin/dashboard" routerLinkActive="active-link" class="admin-nav-btn">
+                  <mat-icon>dashboard</mat-icon>
+                  <span>Dashboard</span>
+                </button>
+                <button mat-button routerLink="/admin/patients" routerLinkActive="active-link" class="admin-nav-btn">
+                  <mat-icon>people</mat-icon>
+                  <span>Manage Patients</span>
+                </button>
+                <button mat-button routerLink="/doctors" routerLinkActive="active-link" class="admin-nav-btn">
+                  <mat-icon>medical_services</mat-icon>
+                  <span>Manage Doctors</span>
+                </button>
+              </div>
+            </div>
+          </ng-container>
         </ng-container>
       </div>
 

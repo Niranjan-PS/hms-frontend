@@ -1,59 +1,141 @@
 <div class="container">
-  <h2>Doctor Profile</h2>
-  <div *ngIf="success" class="success">{{ success }}</div>
-  <div *ngIf="error" class="error">{{ error }}</div>
-  <form [formGroup]="doctorForm" (ngSubmit)="onSubmit()">
-    <div class="form-group">
-      <label for="name">Name:</label>
-      <input id="name" formControlName="name" required />
-      <div *ngIf="doctorForm.get('name')?.invalid && doctorForm.get('name')?.touched" class="error">
-        Name is required
-      </div>
+  <div class="profile-card">
+    <div class="profile-card-header">
+      <h2>Doctor Profile</h2>
     </div>
-    <div class="form-group">
-      <label for="email">Email:</label>
-      <input id="email" formControlName="email" type="email" required />
-      <div *ngIf="doctorForm.get('email')?.invalid && doctorForm.get('email')?.touched" class="error">
-        Valid email is required
+
+    <div class="profile-card-content">
+      <!-- Loading indicator -->
+      <div *ngIf="loading" class="loading">
+        <mat-spinner diameter="40"></mat-spinner>
       </div>
-    </div>
-    <div class="form-group">
-      <label for="phone">Phone:</label>
-      <input id="phone" formControlName="phone" required />
-      <div *ngIf="doctorForm.get('phone')?.invalid && doctorForm.get('phone')?.touched" class="error">
-        Valid phone number is required
+
+      <!-- Success and error messages -->
+      <div *ngIf="success" class="success-message">
+        <mat-icon>check_circle</mat-icon>
+        <span>{{ success }}</span>
       </div>
-    </div>
-    <div class="form-group">
-      <label for="department">Department:</label>
-      <input id="department" formControlName="department" required />
-      <div *ngIf="doctorForm.get('department')?.invalid && doctorForm.get('department')?.touched" class="error">
-        Department is required
+
+      <div *ngIf="error" class="error-message">
+        <mat-icon>error</mat-icon>
+        <span>{{ error }}</span>
       </div>
+
+      <!-- Doctor profile form -->
+      <form [formGroup]="doctorForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
+        <!-- Basic Information Section -->
+        <h3 class="section-title">
+          <mat-icon>person</mat-icon>
+          <span>Basic Information</span>
+        </h3>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="name" required>
+            <mat-icon matPrefix>badge</mat-icon>
+            <mat-error *ngIf="doctorForm.get('name')?.invalid && doctorForm.get('name')?.touched">
+              Name is required
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" type="email" required>
+            <mat-icon matPrefix>email</mat-icon>
+            <mat-error *ngIf="doctorForm.get('email')?.invalid && doctorForm.get('email')?.touched">
+              Valid email is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Phone</mat-label>
+            <input matInput formControlName="phone" required>
+            <mat-icon matPrefix>phone</mat-icon>
+            <mat-error *ngIf="doctorForm.get('phone')?.invalid && doctorForm.get('phone')?.touched">
+              Valid phone number is required
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Department</mat-label>
+            <input matInput formControlName="department" required>
+            <mat-icon matPrefix>business</mat-icon>
+            <mat-error *ngIf="doctorForm.get('department')?.invalid && doctorForm.get('department')?.touched">
+              Department is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>License Number</mat-label>
+            <input matInput formControlName="licenseNumber" required>
+            <mat-icon matPrefix>card_membership</mat-icon>
+            <mat-error *ngIf="doctorForm.get('licenseNumber')?.invalid && doctorForm.get('licenseNumber')?.touched">
+              License number is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Availability Section -->
+        <div formArrayName="availability" class="availability-section">
+          <div class="availability-header">
+            <h3 class="section-title">
+              <mat-icon>schedule</mat-icon>
+              <span>Availability</span>
+            </h3>
+            <button mat-mini-fab color="primary" type="button" (click)="addAvailability()" class="btn-add">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+
+          <div *ngFor="let avail of availability.controls; let i=index" [formGroupName]="i" class="availability-group">
+            <mat-form-field appearance="outline">
+              <mat-label>Day</mat-label>
+              <mat-select formControlName="day" required>
+                <mat-option value="">Select Day</mat-option>
+                <mat-option *ngFor="let day of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']" [value]="day">
+                  {{ day }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="avail.get('day')?.invalid && avail.get('day')?.touched">
+                Day is required
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Start Time</mat-label>
+              <input matInput formControlName="startTime" type="time" required>
+              <mat-error *ngIf="avail.get('startTime')?.invalid && avail.get('startTime')?.touched">
+                Start time is required
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>End Time</mat-label>
+              <input matInput formControlName="endTime" type="time" required>
+              <mat-error *ngIf="avail.get('endTime')?.invalid && avail.get('endTime')?.touched">
+                End time is required
+              </mat-error>
+            </mat-form-field>
+
+            <button mat-mini-fab color="warn" type="button" (click)="removeAvailability(i)" *ngIf="availability.length > 1" class="btn-remove">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="form-actions">
+          <button mat-raised-button color="primary" type="submit" [disabled]="doctorForm.invalid" class="btn-submit">
+            <mat-icon>save</mat-icon>
+            Update Doctor
+          </button>
+        </div>
+      </form>
     </div>
-    <div class="form-group">
-      <label for="licenseNumber">License Number:</label>
-      <input id="licenseNumber" formControlName="licenseNumber" required />
-      <div *ngIf="doctorForm.get('licenseNumber')?.invalid && doctorForm.get('licenseNumber')?.touched" class="error">
-        License number is required
-      </div>
-    </div>
-    <div formArrayName="availability">
-      <h3>Availability</h3>
-      <div *ngFor="let avail of availability.controls; let i=index" [formGroupName]="i" class="availability-group">
-        <label for="day-{{i}}">Day:</label>
-        <select id="day-{{i}}" formControlName="day" required>
-          <option value="">Select Day</option>
-          <option *ngFor="let day of ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']" [value]="day">{{ day }}</option>
-        </select>
-        <label for="startTime-{{i}}">Start Time:</label>
-        <input id="startTime-{{i}}" formControlName="startTime" type="time" required />
-        <label for="endTime-{{i}}">End Time:</label>
-        <input id="endTime-{{i}}" formControlName="endTime" type="time" required />
-        <button type="button" (click)="removeAvailability(i)" *ngIf="availability.length > 1">Remove</button>
-      </div>
-      <button type="button" (click)="addAvailability()">Add Availability</button>
-    </div>
-    <button type="submit" [disabled]="doctorForm.invalid">Update Doctor</button>
-  </form>
+  </div>
 </div>

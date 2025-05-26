@@ -1,39 +1,127 @@
-<div class="container">
-  <h2>Appointment Details</h2>
-  <div *ngIf="success" class="success">{{ success }}</div>
-  <div *ngIf="error" class="error">{{ error }}</div>
-  <div *ngIf="appointment">
-    <p><strong>Patient:</strong> {{ appointment.patient.name }}</p>
-    <p><strong>Doctor:</strong> {{ appointment.doctor.user.name }}</p>
-    <p><strong>Status:</strong> {{ appointment.status }}</p>
-    <form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label for="date">Date and Time:</label>
-        <input id="date" formControlName="date" type="datetime-local" required />
-        <div *ngIf="appointmentForm.get('date')?.invalid && appointmentForm.get('date')?.touched" class="error">
-          Date and time are required
+<div class="appointment-detail-container">
+  <mat-card class="appointment-card">
+    <mat-card-header>
+      <mat-icon mat-card-avatar>event_note</mat-icon>
+      <mat-card-title>Appointment Details</mat-card-title>
+      <mat-card-subtitle>View and manage your appointment information</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Loading indicator -->
+      <div *ngIf="loading" class="loading-container">
+        <mat-spinner diameter="40"></mat-spinner>
+        <p>Loading appointment details...</p>
+      </div>
+
+      <!-- Success message -->
+      <div *ngIf="success" class="success-message">
+        <mat-icon>check_circle</mat-icon>
+        <span>{{ success }}</span>
+      </div>
+
+      <!-- Error message -->
+      <div *ngIf="error" class="error-message">
+        <mat-icon>error</mat-icon>
+        <span>{{ error }}</span>
+      </div>
+
+      <!-- Appointment details -->
+      <div *ngIf="appointment && !loading" class="appointment-content">
+        <!-- Key information section -->
+        <div class="appointment-header">
+          <div class="appointment-participants">
+            <div class="participant-info">
+              <mat-icon class="participant-icon">person</mat-icon>
+              <div class="participant-details">
+                <span class="participant-label">Patient</span>
+                <span class="participant-name">{{ appointment.patient.user.name || appointment.patient.user.name }}</span>
+              </div>
+            </div>
+
+            <mat-divider [vertical]="true"></mat-divider>
+
+            <div class="participant-info">
+              <mat-icon class="participant-icon">medical_services</mat-icon>
+              <div class="participant-details">
+                <span class="participant-label">Doctor</span>
+                <span class="participant-name">{{ appointment.doctor.name|| 'Unknown' }}</span>
+                <span class="participant-dept">{{ appointment.doctor.department || 'Unknown' }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="appointment-status">
+            <span class="status-label">Status</span>
+            <div [ngClass]="'status-chip status-' + appointment.status">
+              {{ appointment.status | titlecase }}
+            </div>
+          </div>
         </div>
+
+        <mat-divider></mat-divider>
+
+        <!-- Appointment form -->
+        <form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()" class="appointment-form">
+          <!-- Date and Time -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Appointment Date & Time</mat-label>
+            <input matInput formControlName="date" type="datetime-local" required>
+            <mat-icon matPrefix>event</mat-icon>
+            <mat-error *ngIf="appointmentForm.get('date')?.invalid && appointmentForm.get('date')?.touched">
+              Date and time are required
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Reason -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Reason for Appointment</mat-label>
+            <textarea matInput formControlName="reason" rows="4" required></textarea>
+            <mat-icon matPrefix>description</mat-icon>
+            <mat-error *ngIf="appointmentForm.get('reason')?.invalid && appointmentForm.get('reason')?.touched">
+              Reason is required
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Status (for doctors and admins only) -->
+          <mat-form-field appearance="outline" class="full-width" *ngIf="isDoctor || isAdmin">
+            <mat-label>Appointment Status</mat-label>
+            <mat-select formControlName="status">
+              <mat-option value="pending">Pending</mat-option>
+              <mat-option value="confirmed">Confirmed</mat-option>
+              <mat-option value="completed">Completed</mat-option>
+              <mat-option value="cancelled">Cancelled</mat-option>
+            </mat-select>
+            <mat-icon matPrefix>update</mat-icon>
+          </mat-form-field>
+
+          <!-- Action buttons -->
+          <div class="form-actions">
+            <button mat-raised-button color="primary" type="submit"
+                    [disabled]="appointmentForm.invalid || loading" class="action-button">
+              <mat-icon *ngIf="!loading">save</mat-icon>
+              <mat-spinner *ngIf="loading" diameter="20" class="button-spinner"></mat-spinner>
+              Update Appointment
+            </button>
+
+            <button mat-stroked-button color="warn" type="button"
+                    *ngIf="appointment.status !== 'cancelled'"
+                    [disabled]="loading"
+                    (click)="cancelAppointment()"
+                    class="action-button">
+              <mat-icon>cancel</mat-icon>
+              Cancel Appointment
+            </button>
+
+            <button mat-stroked-button type="button"
+                    [routerLink]="['/appointments']"
+                    [disabled]="loading"
+                    class="action-button">
+              <mat-icon>arrow_back</mat-icon>
+              Back to Appointments
+            </button>
+          </div>
+        </form>
       </div>
-      <div class="form-group">
-        <label for="reason">Reason:</label>
-        <textarea id="reason" formControlName="reason" required></textarea>
-        <div *ngIf="appointmentForm.get('reason')?.invalid && appointmentForm.get('reason')?.touched" class="error">
-          Reason is required
-        </div>
-      </div>
-      <div class="form-group" *ngIf="isDoctor || isAdmin">
-        <label for="status">Status:</label>
-        <select id="status" formControlName="status">
-          <option value="pending">Pending</option>
-          <option value="confirmed">Confirmed</option>
-          <option value="completed">Completed</option>
-          <option value="cancelled">Cancelled</option>
-        </select>
-      </div>
-      <button type="submit" [disabled]="appointmentForm.invalid">Update Appointment</button>
-      <button type="button" (click)="cancelAppointment()" *ngIf="appointment.status !== 'cancelled'">
-        Cancel Appointment
-      </button>
-    </form>
-  </div>
+    </mat-card-content>
+  </mat-card>
 </div>
