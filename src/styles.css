@@ -135,6 +135,7 @@ mat-icon {
   width: 22px;
   height: 22px;
   line-height: 22px;
+  color: #2196f3; /* Soft blue for icons */
 }
 
 /* Typography */
@@ -149,7 +150,7 @@ p {
 /* Toolbar styles */
 .mat-toolbar {
   background: linear-gradient(135deg, #2196f3 0%, #42a5f5 100%); /* Gradient from soft blue to lighter blue */
-  color: #ffffff;
+
   padding: 0 24px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   display: flex;
@@ -158,10 +159,10 @@ p {
 }
 
 .mat-toolbar span {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 500;
   letter-spacing: 0.5px;
-  color: black;
+  color: rgb(11, 22, 97);
 }
 
 /* Navigation buttons */
@@ -205,6 +206,7 @@ p {
   font-weight: 500 !important;
 }
 
+
 /* Responsive design for toolbar */
 @media (max-width: 768px) {
   .mat-toolbar {
@@ -227,4 +229,168 @@ p {
     font-size: 14px;
     padding: 0 12px;
   }
+}
+
+/* ===== GLOBAL MAT-SELECT DROPDOWN POSITIONING FIXES ===== */
+
+/* CRITICAL: Fix for mat-select dropdown positioning issues */
+
+/* Step 1: Ensure body and html allow overflow */
+html, body {
+  overflow-x: visible !important;
+}
+
+/* Step 2: Fix CDK overlay container positioning */
+.cdk-overlay-container {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 1000 !important;
+  pointer-events: none !important;
+}
+
+.cdk-overlay-pane {
+  pointer-events: auto !important;
+  position: absolute !important;
+  z-index: 1001 !important;
+}
+
+.cdk-overlay-backdrop {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 999 !important;
+  pointer-events: auto !important;
+  background-color: rgba(0, 0, 0, 0.32) !important;
+}
+
+/* Step 3: Fix mat-select panel positioning */
+.mat-mdc-select-panel {
+  position: absolute !important;
+  z-index: 1002 !important;
+  max-height: 256px !important;
+  min-width: 100% !important;
+  overflow-y: auto !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15) !important;
+  border-radius: 8px !important;
+  background: white !important;
+  margin-top: 8px !important;
+  transform-origin: top center !important;
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Fix for panel positioning when above the trigger */
+.mat-mdc-select-panel.mat-mdc-select-panel-above {
+  margin-top: -8px !important;
+  transform-origin: bottom center !important;
+}
+
+/* Step 4: Style mat-select options */
+.mat-mdc-option {
+  padding: 16px !important;
+  min-height: 48px !important;
+  line-height: 1.4 !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+  transition: background-color 0.2s ease !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  font-size: 14px !important;
+  color: #333 !important;
+}
+
+.mat-mdc-option:hover {
+  background-color: rgba(33, 150, 243, 0.08) !important;
+}
+
+.mat-mdc-option.mdc-list-item--selected {
+  background-color: rgba(33, 150, 243, 0.12) !important;
+  color: #1976d2 !important;
+  font-weight: 500 !important;
+}
+
+.mat-mdc-option:last-child {
+  border-bottom: none !important;
+}
+
+/* Step 5: Fix form field containers to allow overflow */
+.mat-mdc-form-field {
+  position: relative !important;
+  overflow: visible !important;
+}
+
+.mat-mdc-form-field-wrapper {
+  overflow: visible !important;
+}
+
+.mat-mdc-form-field-flex {
+  overflow: visible !important;
+}
+
+.mat-mdc-form-field-infix {
+  overflow: visible !important;
+}
+
+/* Step 6: Fix card containers that might clip dropdowns */
+.mat-card {
+  overflow: visible !important;
+}
+
+.mat-card-content {
+  overflow: visible !important;
+}
+
+/* Step 7: Custom panel class for appointment create component */
+.custom-select-panel {
+  position: absolute !important;
+  top: 100% !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 1003 !important;
+  max-height: 256px !important;
+  overflow-y: auto !important;
+  background: white !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15) !important;
+  border-radius: 8px !important;
+  margin-top: 8px !important;
+  transform-origin: top center !important;
+  min-width: 100% !important;
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Step 8: Responsive fixes for mobile */
+@media (max-width: 768px) {
+  .mat-mdc-select-panel,
+  .custom-select-panel {
+    max-height: 200px !important;
+    margin-top: 4px !important;
+  }
+
+  .mat-mdc-option {
+    padding: 20px 16px !important;
+    min-height: 56px !important;
+    font-size: 16px !important;
+  }
+}
+
+/* Step 9: Fix backdrop behavior */
+.cdk-overlay-backdrop.cdk-overlay-backdrop-showing {
+  opacity: 0.32 !important;
+}
+
+/* Step 10: Prevent clipping in any container */
+.appointment-create-container,
+.appointment-card,
+.hospital-container {
+  overflow: visible !important;
+}
+
+/* Step 11: Fix transform issues that break positioning */
+.hospital-container:hover {
+  transform: none !important; /* Remove transform that breaks dropdown positioning */
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
 }

@@ -8,16 +8,20 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
+  /* CRITICAL: Remove overflow hidden that clips dropdowns */
+  overflow: visible !important;
 }
 
 /* Card styling */
 .appointment-card {
   width: 100%;
   border-radius: 12px;
-  overflow: hidden;
+  /* CRITICAL: Change overflow to visible to allow dropdown to extend outside */
+  overflow: visible !important;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
   background-color: white;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: box-shadow 0.3s ease;
+  /* Remove transform transition that interferes with positioning */
 }
 
 .appointment-card:hover {
@@ -45,6 +49,9 @@ mat-card-subtitle {
 
 mat-card-content {
   padding: 0 24px 24px 24px;
+  /* CRITICAL: Ensure content area allows dropdown overflow */
+  overflow: visible !important;
+  position: relative;
 }
 
 /* Form styling */
@@ -202,4 +209,37 @@ mat-form-field:nth-child(3) { animation-delay: 0.3s; }
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* ===== COMPONENT-SPECIFIC FIXES ===== */
+
+/* Remove problematic transforms and ensure overflow visibility */
+.appointment-create-container {
+  overflow: visible !important;
+}
+
+.appointment-card {
+  overflow: visible !important;
+}
+
+.appointment-card:hover {
+  /* Remove transform that interferes with dropdown positioning */
+  transform: none !important;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+mat-card-content {
+  overflow: visible !important;
+}
+
+/* Ensure proper spacing for form fields */
+.full-width {
+  margin-bottom: 24px;
+  overflow: visible !important;
+}
+
+/* Fix availability section positioning */
+.availability-section {
+  margin-top: 16px;
+  clear: both;
 }

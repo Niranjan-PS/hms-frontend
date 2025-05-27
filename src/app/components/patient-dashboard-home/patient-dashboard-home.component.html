@@ -13,7 +13,7 @@
     </div>
 
     <!-- Quick Actions Cards -->
-    <div class="dashboard-cards">
+    <div class="dashboard-cards" routerLink="/patient/profile" >
       <mat-card class="dashboard-card">
         <mat-card-header>
           <mat-icon mat-card-avatar>person</mat-icon>
@@ -31,7 +31,7 @@
         </mat-card-actions>
       </mat-card>
 
-      <mat-card class="dashboard-card">
+      <mat-card class="dashboard-card"  routerLink="/appointments">
         <mat-card-header>
           <mat-icon mat-card-avatar>event</mat-icon>
           <mat-card-title>My Appointments</mat-card-title>
@@ -52,7 +52,7 @@
         </mat-card-actions>
       </mat-card>
 
-      <mat-card class="dashboard-card">
+      <mat-card class="dashboard-card" routerLink="/patient/doctors">
         <mat-card-header>
           <mat-icon mat-card-avatar>medical_services</mat-icon>
           <mat-card-title>Find Doctors</mat-card-title>
@@ -65,6 +65,25 @@
           <button mat-raised-button color="primary" routerLink="/patient/doctors">
             <mat-icon>search</mat-icon>
             Browse Doctors
+          </button>
+        </mat-card-actions>
+      </mat-card>
+
+
+      <!-- About Us Card -->
+      <mat-card class="dashboard-card"  routerLink="/patient/about-us">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>info</mat-icon>
+          <mat-card-title>About MedNest</mat-card-title>
+          <mat-card-subtitle>Learn more about our healthcare mission</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Discover our commitment to excellence in healthcare and our comprehensive services.</p>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-raised-button color="primary" routerLink="/patient/about-us">
+            <mat-icon>info_outline</mat-icon>
+            About Us
           </button>
         </mat-card-actions>
       </mat-card>

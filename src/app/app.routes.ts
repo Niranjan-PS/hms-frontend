@@ -19,6 +19,7 @@ import { AppointmentListComponent } from './components/appointment-list/appointm
 import { AppointmentDetailComponent } from './components/appointment-detail/appointment-detail.component';
 import { AppointmentCreateComponent } from './components/appointment-create/appointment-create.component';
 import { PatientDetailComponent } from './components/patient-detail/patient-detail.component';
+import { AboutUsComponent } from './components/about-us/about-us.component';
 
 export const routes: Routes = [
   // Public routes
@@ -36,6 +37,7 @@ export const routes: Routes = [
       { path: 'dashboard', component: PatientDashboardHomeComponent },
       { path: 'profile', component: PatientProfileComponent },
       { path: 'doctors', component: PatientDoctorListComponent },
+      { path: 'about-us', component: AboutUsComponent },
     ],
   },
 

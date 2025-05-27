@@ -29,7 +29,11 @@
         <!-- Doctor Selection -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Select Doctor</mat-label>
-          <mat-select formControlName="doctor" required>
+          <mat-select
+            formControlName="doctor"
+            required
+            panelClass="custom-select-panel"
+            [disableOptionCentering]="true">
             <mat-option value="">-- Select a doctor --</mat-option>
             <mat-option *ngFor="let doc of doctors" [value]="doc._id">
               {{ doc.name }} ({{ doc.department }})

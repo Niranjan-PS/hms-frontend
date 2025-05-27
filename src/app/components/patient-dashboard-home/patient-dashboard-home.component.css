@@ -41,6 +41,7 @@
   font-weight: 700;
   letter-spacing: 0.5px;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  color: rgb(202, 218, 243);
 }
 
 .dashboard-subtitle {
@@ -72,7 +73,7 @@
 }
 
 .dashboard-card mat-card-header {
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background: linear-gradient(135deg, #f8f9fa 0%, #5197dc 100%);
   padding: 20px 24px;
 }
 

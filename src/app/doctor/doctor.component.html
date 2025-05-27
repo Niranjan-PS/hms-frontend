@@ -14,13 +14,10 @@
         <div mat-card-avatar class="doctor-avatar">
           <mat-icon>person</mat-icon>
         </div>
-        <mat-card-title>Dr. {{ doctor.name }}</mat-card-title>
+        <mat-card-title> {{ doctor.name }}</mat-card-title>
         <mat-card-subtitle>{{ doctor.department }}</mat-card-subtitle>
 
-        <button mat-raised-button color="primary" class="profile-button" (click)="editProfile()">
-          <mat-icon>edit</mat-icon>
-          My Profile
-        </button>
+        
       </mat-card-header>
 
       <mat-card-content>

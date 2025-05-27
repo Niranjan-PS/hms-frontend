@@ -1,0 +1,166 @@
+<!-- About Us Component -->
+<div class="about-us-container">
+  
+  <!-- Back Button -->
+  <div class="back-button-section">
+    <button 
+      mat-flat-button 
+      color="primary" 
+      (click)="navigateBack()" 
+      class="back-button"
+      matTooltip="Return to Dashboard">
+      <mat-icon>arrow_back</mat-icon>
+      <span>Back to Dashboard</span>
+    </button>
+  </div>
+
+  <!-- Header Section -->
+  <div class="about-header">
+    <h1 class="about-title">About MedNest</h1>
+    <p class="about-subtitle">Your trusted healthcare partner</p>
+  </div>
+
+  <!-- Main Content -->
+  <div class="about-content">
+    
+    <!-- Mission Card -->
+    <mat-card class="about-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar class="card-icon mission-icon">favorite</mat-icon>
+        <mat-card-title>Our Mission</mat-card-title>
+        <mat-card-subtitle>Committed to excellence in healthcare</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p>
+          At MedNest, we are dedicated to providing exceptional healthcare services with compassion, 
+          innovation, and excellence. Our mission is to improve the health and well-being of our 
+          community by delivering personalized, high-quality medical care that meets the unique 
+          needs of each patient.
+        </p>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Services Card -->
+    <mat-card class="about-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar class="card-icon services-icon">medical_services</mat-icon>
+        <mat-card-title>Our Services</mat-card-title>
+        <mat-card-subtitle>Comprehensive healthcare solutions</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="services-grid">
+          <div class="service-item">
+            <mat-icon>psychology</mat-icon>
+            <span>Mental Health</span>
+          </div>
+          <div class="service-item">
+            <mat-icon>healing</mat-icon>
+            <span>General Medicine</span>
+          </div>
+          <div class="service-item">
+            <mat-icon>child_care</mat-icon>
+            <span>Pediatrics</span>
+          </div>
+          <div class="service-item">
+            <mat-icon>monitor_heart</mat-icon>
+            <span>Cardiology</span>
+          </div>
+          <div class="service-item">
+            <mat-icon>visibility</mat-icon>
+            <span>Ophthalmology</span>
+          </div>
+          <div class="service-item">
+            <mat-icon>local_hospital</mat-icon>
+            <span>Emergency Care</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Values Card -->
+    <mat-card class="about-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar class="card-icon values-icon">star</mat-icon>
+        <mat-card-title>Our Values</mat-card-title>
+        <mat-card-subtitle>What drives us every day</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="values-list">
+          <div class="value-item">
+            <mat-icon>security</mat-icon>
+            <div class="value-content">
+              <h4>Trust & Safety</h4>
+              <p>Your health information is secure and your safety is our top priority.</p>
+            </div>
+          </div>
+          <div class="value-item">
+            <mat-icon>groups</mat-icon>
+            <div class="value-content">
+              <h4>Patient-Centered Care</h4>
+              <p>We put patients at the center of everything we do, ensuring personalized treatment.</p>
+            </div>
+          </div>
+          <div class="value-item">
+            <mat-icon>science</mat-icon>
+            <div class="value-content">
+              <h4>Innovation</h4>
+              <p>We embrace cutting-edge technology to provide the best possible care.</p>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Contact Information Card -->
+    <mat-card class="about-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar class="card-icon contact-icon">contact_phone</mat-icon>
+        <mat-card-title>Contact Information</mat-card-title>
+        <mat-card-subtitle>Get in touch with us</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="contact-grid">
+          <div class="contact-item">
+            <mat-icon>location_on</mat-icon>
+            <div class="contact-details">
+              <h4>Address</h4>
+              <p>123 Healthcare Avenue<br>Medical District, City 12345</p>
+            </div>
+          </div>
+          <div class="contact-item">
+            <mat-icon>phone</mat-icon>
+            <div class="contact-details">
+              <h4>Phone</h4>
+              <p>Emergency: (555) 911-HELP<br>General: (555) 123-4567</p>
+            </div>
+          </div>
+          <div class="contact-item">
+            <mat-icon>email</mat-icon>
+            <div class="contact-details">
+              <h4>Email</h4>
+              <p>info at mednest.com<br>support at mednest.com</p>
+            </div>
+          </div>
+          <div class="contact-item">
+            <mat-icon>schedule</mat-icon>
+            <div class="contact-details">
+              <h4>Hours</h4>
+              <p>24/7 Emergency Care<br>Mon-Fri: 8AM-8PM</p>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+
+  <!-- Footer Section -->
+  <div class="about-footer">
+    <mat-divider></mat-divider>
+    <p class="footer-text">
+      <mat-icon>copyright</mat-icon>
+      2025 MedNest Healthcare. All rights reserved. | Committed to your health and well-being.
+    </p>
+  </div>
+
+</div>

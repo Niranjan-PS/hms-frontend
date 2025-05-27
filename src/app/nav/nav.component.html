@@ -3,10 +3,12 @@
     <div class="toolbar-content">
       <div class="logo-section">
         <a routerLink="/" class="logo-link">
-          <mat-icon class="logo-icon">local_hospital</mat-icon>
-          <span class="logo-text">HMS</span>
+          <mat-icon  id="hms-logo">local_hospital</mat-icon>
+          
+          <span  id="hms-text">MedNest</span>
         </a>
       </div>
+      
 
       <div class="nav-links">
         <ng-container *ngIf="authService.user$ | async as user">
