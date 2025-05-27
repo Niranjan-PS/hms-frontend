@@ -69,14 +69,14 @@ export class AdminDashboardHomeComponent implements OnInit {
     this.loading = true;
     this.error = null;
 
-    // Get authentication token
+   
     const token = this.authService.getToken();
     const headers = {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     };
 
-    // Make parallel API calls to get all statistics
+   
     forkJoin({
       patients: this.http.get<any>(this.PATIENTS_API, { headers }).pipe(
         catchError(error => {
@@ -98,8 +98,7 @@ export class AdminDashboardHomeComponent implements OnInit {
       )
     }).subscribe({
       next: (data) => {
-        // Calculate statistics from the fetched data
-        // Handle different response formats from backend APIs
+  
         const patientsArray = data.patients.success ? data.patients.patients : [];
         const doctorsArray = Array.isArray(data.doctors) ? data.doctors : [];
         const appointmentsArray = data.appointments.success ? data.appointments.appointments : [];
@@ -127,7 +126,7 @@ export class AdminDashboardHomeComponent implements OnInit {
       return 0;
     }
 
-    // Count appointments with status 'pending' or 'scheduled'
+    
     return appointments.filter(appointment =>
       appointment.status === 'pending' ||
       appointment.status === 'scheduled' ||

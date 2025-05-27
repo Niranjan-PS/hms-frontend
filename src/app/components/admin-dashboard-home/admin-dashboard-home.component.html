@@ -1,7 +1,7 @@
-<!-- Admin Dashboard Home -->
+
 <div class="dashboard-home-container">
 
-  <!-- Welcome Header -->
+  
   <div class="welcome-section">
     <mat-card class="welcome-card">
       <mat-card-content class="welcome-content">
@@ -18,15 +18,13 @@
             [disabled]="loading">
             <mat-icon [class.spinning]="loading">refresh</mat-icon>
           </button>
-          <!-- <div class="welcome-icon">
-            <mat-icon class="admin-icon">admin_panel_settings</mat-icon>
-          </div> -->
+        
         </div>
       </mat-card-content>
     </mat-card>
   </div>
 
-  <!-- Error Message -->
+
   <div *ngIf="error && !loading" class="error-section">
     <mat-card class="error-card">
       <mat-card-content class="error-content">
@@ -40,11 +38,10 @@
     </mat-card>
   </div>
 
-  <!-- Statistics Cards -->
+ 
   <div class="stats-section" *ngIf="!error">
     <div class="stats-grid">
 
-      <!-- Total Patients Card -->
       <mat-card class="stat-card patients-card" (click)="!loading && navigateToPatients()" [class.disabled]="loading">
         <mat-card-content class="stat-content">
           <div class="stat-icon-container">
@@ -61,7 +58,7 @@
         </mat-card-content>
       </mat-card>
 
-      <!-- Total Doctors Card -->
+    
       <mat-card class="stat-card doctors-card" (click)="!loading && navigateToDoctors()" [class.disabled]="loading">
         <mat-card-content class="stat-content">
           <div class="stat-icon-container">
@@ -78,7 +75,7 @@
         </mat-card-content>
       </mat-card>
 
-      <!-- Total Appointments Card -->
+      
       <mat-card class="stat-card appointments-card" (click)="!loading && navigateToAppointments()" [class.disabled]="loading">
         <mat-card-content class="stat-content">
           <div class="stat-icon-container">
@@ -95,7 +92,7 @@
         </mat-card-content>
       </mat-card>
 
-      <!-- Pending Appointments Card -->
+      
       <mat-card class="stat-card pending-card" (click)="!loading && navigateToAppointments()" [class.disabled]="loading">
         <mat-card-content class="stat-content">
           <div class="stat-icon-container">
@@ -115,7 +112,7 @@
     </div>
   </div>
 
-  <!-- Quick Actions Section -->
+  
   <div class="actions-section">
     <mat-card class="actions-card">
       <mat-card-header class="actions-header">

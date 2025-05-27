@@ -1,4 +1,4 @@
-/* Container styling */
+
 .appointment-create-container {
   max-width: 800px;
   margin: 0 auto;
@@ -8,11 +8,10 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  /* CRITICAL: Remove overflow hidden that clips dropdowns */
   overflow: visible !important;
 }
 
-/* Card styling */
+
 .appointment-card {
   width: 100%;
   border-radius: 12px;

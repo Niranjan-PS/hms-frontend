@@ -1,16 +1,14 @@
-/* ===== HMS ADMIN PORTAL DASHBOARD ===== */
 
-/* Main Container */
 .admin-dashboard-container {
   display: flex;
   flex-direction: column;
-  min-height: calc(100vh - 64px); /* Account for main nav height */
-  background: linear-gradient(135deg, #121315 0%, #c3cfe2 100%);
+  min-height: calc(100vh - 64px); 
+  background: linear-gradient(135deg, #ffffff 0%, #6195ea 100%);
   font-family: 'Roboto', 'Helvetica Neue', sans-serif;
   padding: 0;
 }
 
-/* ===== CONTENT AREA ===== */
+
 .admin-content {
   flex: 1;
   padding: 0;
@@ -20,15 +18,15 @@
   background: transparent;
 }
 
-/* ===== CONTENT WRAPPER ===== */
+
 .content-wrapper {
   background: transparent;
-  min-height: calc(100vh - 64px - 80px); /* Account for nav and footer */
+  min-height: calc(100vh - 64px - 80px); 
   padding: 0;
   margin: 0;
 }
 
-/* ===== FOOTER STYLES ===== */
+
 .admin-footer {
   background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
   color: white;
@@ -74,7 +72,7 @@
   background: rgba(255, 255, 255, 0.1) !important;
 }
 
-/* ===== RESPONSIVE DESIGN ===== */
+
 @media (max-width: 768px) {
   .footer-content {
     flex-direction: column;
@@ -89,7 +87,7 @@
   }
 }
 
-/* ===== ANIMATIONS ===== */
+
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -105,7 +103,7 @@
   animation: fadeInUp 0.6s ease forwards;
 }
 
-/* ===== PRINT STYLES ===== */
+
 @media print {
   .admin-footer {
     display: none;

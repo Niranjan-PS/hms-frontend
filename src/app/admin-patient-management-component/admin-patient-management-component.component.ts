@@ -76,7 +76,7 @@ export class AdminPatientManagementComponent implements OnInit {
           if (this.table) {
             this.table.renderRows();
           }
-          this.error = null; // Clear any previous error
+          this.error = null;
           this.snackBar.open('Patient deleted successfully', 'Close', {
             duration: 3000,
             horizontalPosition: 'end',
