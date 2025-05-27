@@ -23,7 +23,7 @@ export class DoctorService {
   constructor(private http: HttpClient) {}
 
   private getAuthHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token'); // Or use your AuthService
+    const token = localStorage.getItem('token'); 
     return new HttpHeaders({
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
@@ -61,7 +61,7 @@ export class DoctorService {
     });
   }
 
-  // Get current doctor by user ID
+  
   getCurrentDoctor(): Observable<Doctor> {
     return this.http.get<Doctor>(`${this.apiUrl}/current`, {
       headers: this.getAuthHeaders(),

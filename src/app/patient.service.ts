@@ -32,7 +32,7 @@ export class PatientService {
 
 
   getPatient(id: string): Observable<Patient> {
-    console.log('PatientService - Getting patient:', id);
+    
 
     if (!id) {
       return throwError(() => new Error('Patient ID is required'));
@@ -46,7 +46,7 @@ export class PatientService {
         return patient;
       }),
       catchError((error: HttpErrorResponse) => {
-        console.error('PatientService - Error getting patient:', error);
+        
 
         let errorMessage = 'Failed to load patient details';
 

@@ -70,7 +70,7 @@ export class AppointmentCreateComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        console.error('Fetch error:', err);
+       
         this.error = 'Failed to load doctors';
         this.loading = false;
 
@@ -83,7 +83,7 @@ export class AppointmentCreateComponent implements OnInit {
       },
     });
 
-    // Listen for doctor selection changes
+    
     this.appointmentForm.get('doctor')?.valueChanges.subscribe(doctorId => {
       this.selectedDoctor = this.doctors.find(doc => doc._id === doctorId) || null;
     });
@@ -91,20 +91,20 @@ export class AppointmentCreateComponent implements OnInit {
 
   onSubmit(): void {
     if (this.appointmentForm.valid) {
-      console.log('Submitting appointment:', this.appointmentForm.value);
+     
 
-      // Show loading state
+      
       this.loading = true;
       this.error = null;
       this.success = null;
 
       this.appointmentService.createAppointment(this.appointmentForm.value).subscribe({
         next: (appointment) => {
-          console.log('Appointment created:', appointment);
+        
           this.loading = false;
           this.success = 'Appointment booked successfully!';
 
-          // Show success message with snackbar
+          
           this.snackBar.open('Appointment booked successfully!', 'Close', {
             duration: 5000,
             horizontalPosition: 'end',
@@ -116,11 +116,11 @@ export class AppointmentCreateComponent implements OnInit {
           setTimeout(() => this.router.navigate(['/appointments']), 2000);
         },
         error: (err) => {
-          console.error('Create error:', err);
+         
           this.loading = false;
           this.error = err.error?.message || 'Failed to book appointment';
 
-          // Show error message with snackbar
+          
           this.snackBar.open(this.error || 'Failed to book appointment', 'Close', {
             duration: 5000,
             horizontalPosition: 'end',
@@ -130,12 +130,12 @@ export class AppointmentCreateComponent implements OnInit {
         },
       });
     } else {
-      // Mark all form controls as touched to trigger validation messages
+      
       this.markFormGroupTouched(this.appointmentForm);
 
       this.error = 'Please fill all required fields correctly';
 
-      // Show validation error message with snackbar
+      
       this.snackBar.open('Please fill all required fields correctly', 'Close', {
         duration: 3000,
         horizontalPosition: 'end',
@@ -145,7 +145,7 @@ export class AppointmentCreateComponent implements OnInit {
     }
   }
 
-  // Helper method to mark all controls in a form group as touched
+  
   private markFormGroupTouched(formGroup: FormGroup) {
     Object.values(formGroup.controls).forEach(control => {
       control.markAsTouched();

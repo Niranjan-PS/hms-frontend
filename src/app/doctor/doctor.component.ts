@@ -59,18 +59,18 @@ export class DoctorComponent implements OnInit {
   doctor: Doctor | null = null;
   availabilityForm: FormGroup;
   appointments: Appointment[] = [];
-  patients: any[] = []; // Will store patients assigned to this doctor
+  patients: any[] = []; 
   error: string | null = null;
   success: string | null = null;
   loading: boolean = false;
 
-  // For the appointments table
+ 
   displayedColumns: string[] = ['patient', 'date', 'reason', 'status', 'actions'];
 
-  // For the patients table
+  
   patientColumns: string[] = ['name', 'gender', 'phone', 'actions'];
 
-  // Track which tab is active
+ 
   activeTabIndex: number = 0;
 
   constructor(
@@ -93,10 +93,9 @@ export class DoctorComponent implements OnInit {
       this.loadDoctorProfile();
       this.loadAppointments();
 
-      // Listen for navigation events to refresh data when returning from other pages
       this.router.events.subscribe(event => {
         if (event instanceof NavigationEnd && event.url === '/doctor') {
-          console.log('Doctor Component - Returned to doctor dashboard, refreshing data');
+         
           this.refreshAppointments();
         }
       });
@@ -120,10 +119,10 @@ export class DoctorComponent implements OnInit {
         this.populateAvailabilityForm();
         const doctorName = typeof doctor.user === 'object' ? doctor.user.name : doctor.name;
         this.showSnackbar(`Welcome, Dr. ${doctorName}!`, 'success');
-        console.log('Doctor profile loaded:', doctor);
+        
       },
       error: (err) => {
-        console.error('Failed to load doctor profile:', err);
+       
         this.error = 'Failed to load doctor profile';
         this.showSnackbar('Failed to load doctor profile', 'error');
         this.loading = false;
@@ -136,17 +135,17 @@ export class DoctorComponent implements OnInit {
   }
 
   loadAppointments(): void {
-    console.log('Doctor Component - Loading appointments');
+    
     this.appointmentService.getDoctorAppointments().subscribe({
       next: (response) => {
-        console.log('Doctor appointments response:', response);
+       
 
         if (response && response.appointments) {
           this.appointments = response.appointments;
           this.extractPatientsFromAppointments();
           this.error = null;
         } else {
-          console.error('Invalid response format:', response);
+          
           this.appointments = [];
           this.patients = [];
           this.error = 'Invalid response format from server';
@@ -155,7 +154,7 @@ export class DoctorComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        console.error('Fetch appointments error:', err);
+        
         this.error = err.message || 'Failed to load appointments';
         this.showSnackbar(this.error || 'Failed to load appointments', 'error');
         this.appointments = [];
@@ -165,7 +164,7 @@ export class DoctorComponent implements OnInit {
     });
   }
 
-  // Extract unique patients from appointments
+ 
   private extractPatientsFromAppointments(): void {
     const uniquePatients = new Map();
 
@@ -185,17 +184,17 @@ export class DoctorComponent implements OnInit {
     });
 
     this.patients = Array.from(uniquePatients.values());
-    console.log('Extracted patients:', this.patients);
+    
   }
 
-  // Method to refresh appointments (can be called after updates)
+  
   refreshAppointments(): void {
-    console.log('Doctor Component - Refreshing appointments');
+    
     this.loading = true;
     this.loadAppointments();
   }
 
-  // Helper method to show snackbar messages
+ 
   showSnackbar(message: string, type: 'success' | 'error' | 'info'): void {
     const panelClass = {
       'success': ['success-snackbar'],
@@ -248,7 +247,7 @@ export class DoctorComponent implements OnInit {
   onSubmitAvailability(): void {
     if (this.availabilityForm.valid && this.doctor?._id) {
       this.loading = true;
-      console.log('Updating availability:', this.availabilityForm.value);
+      
 
       this.doctorService
         .updateDoctor(this.doctor._id, { availability: this.availabilityForm.value.availability })
@@ -260,7 +259,7 @@ export class DoctorComponent implements OnInit {
             this.loading = false;
           },
           error: (err) => {
-            console.error('Update error:', err);
+            
             this.error = err.error?.message || 'Failed to update availability';
             this.showSnackbar(this.error || 'Failed to update availability', 'error');
             this.loading = false;
@@ -270,12 +269,12 @@ export class DoctorComponent implements OnInit {
       this.error = 'Please fill all required fields';
       this.showSnackbar('Please fill all required fields', 'error');
 
-      // Mark all form controls as touched to trigger validation messages
+    
       this.markFormGroupTouched(this.availabilityForm);
     }
   }
 
-  // Helper method to mark all controls in a form group as touched
+  
   private markFormGroupTouched(formGroup: FormGroup) {
     Object.values(formGroup.controls).forEach(control => {
       control.markAsTouched();
@@ -294,18 +293,18 @@ export class DoctorComponent implements OnInit {
     });
   }
 
-  // Method to view patient details
+ 
   viewPatient(patientId: string): void {
-    // Navigate to patient details page
+   
     this.router.navigate(['/patient', patientId]);
   }
 
-  // Method to handle tab changes
+  
   tabChanged(event: any): void {
     this.activeTabIndex = event.index;
   }
 
-  // Get status class for styling
+  
   getStatusClass(status: string): string {
     switch (status) {
       case 'confirmed': return 'status-confirmed';

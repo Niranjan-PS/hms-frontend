@@ -80,19 +80,19 @@ export class AdminDashboardHomeComponent implements OnInit {
     forkJoin({
       patients: this.http.get<any>(this.PATIENTS_API, { headers }).pipe(
         catchError(error => {
-          console.error('Error fetching patients:', error);
+          
           return of({ success: false, patients: [] });
         })
       ),
       doctors: this.http.get<any[]>(this.DOCTORS_API, { headers }).pipe(
         catchError(error => {
-          console.error('Error fetching doctors:', error);
+          
           return of([]);
         })
       ),
       appointments: this.http.get<any>(this.APPOINTMENTS_API, { headers }).pipe(
         catchError(error => {
-          console.error('Error fetching appointments:', error);
+         
           return of({ success: false, appointments: [] });
         })
       )
@@ -110,10 +110,10 @@ export class AdminDashboardHomeComponent implements OnInit {
           pendingAppointments: this.calculatePendingAppointments(appointmentsArray)
         };
         this.loading = false;
-        console.log('Dashboard stats loaded:', this.stats);
+        
       },
       error: (error) => {
-        console.error('Error loading dashboard stats:', error);
+        
         this.error = 'Failed to load dashboard statistics. Please try again.';
         this.loading = false;
         this.showErrorMessage('Failed to load dashboard data');

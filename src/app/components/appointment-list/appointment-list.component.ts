@@ -45,7 +45,6 @@ export class AppointmentListComponent implements OnInit, OnDestroy {
   today: Date = new Date();
   private navigationSubscription: Subscription = new Subscription();
 
-  // Define columns to display in the table
   displayedColumns: string[] = ['patient', 'doctor', 'department', 'date', 'reason', 'status', 'actions'];
 
   constructor(
@@ -62,12 +61,10 @@ export class AppointmentListComponent implements OnInit, OnDestroy {
     this.isPatient = user?.role === 'patient';
     this.loadAppointments();
 
-    // Listen for navigation events to refresh data when returning from other pages
     this.navigationSubscription = this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
         if (event.url === '/appointments') {
-          console.log('AppointmentList - Returned to appointments page, refreshing data');
           this.refreshAppointments();
         }
       });
@@ -80,23 +77,19 @@ export class AppointmentListComponent implements OnInit, OnDestroy {
   }
 
   loadAppointments(): void {
-    console.log('AppointmentList - Loading appointments');
     this.loading = true;
     this.error = null;
 
     this.appointmentService.getAppointments().subscribe({
       next: (appointments) => {
-        console.log('AppointmentList - Fetched appointments:', appointments);
         this.appointments = appointments;
         this.loading = false;
 
-        // Show message if no appointments found
         if (appointments.length === 0) {
           this.showSnackbar('No appointments found', 'info');
         }
       },
       error: (err) => {
-        console.error('AppointmentList - Fetch error:', err);
         this.error = err.message || 'Failed to load appointments';
         this.loading = false;
         this.showSnackbar(this.error || 'Failed to load appointments', 'error');
@@ -104,9 +97,7 @@ export class AppointmentListComponent implements OnInit, OnDestroy {
     });
   }
 
-  // Method to refresh appointments (can be called after updates)
   refreshAppointments(): void {
-    console.log('AppointmentList - Refreshing appointments');
     this.loadAppointments();
   }
 
@@ -120,7 +111,7 @@ export class AppointmentListComponent implements OnInit, OnDestroy {
 
       this.appointmentService.cancelAppointment(id).subscribe({
         next: () => {
-          console.log('Appointment cancelled:', id);
+         
           this.appointments = this.appointments.map((appt) =>
             appt._id === id ? { ...appt, status: 'cancelled' } : appt
           );
@@ -128,7 +119,7 @@ export class AppointmentListComponent implements OnInit, OnDestroy {
           this.showSnackbar('Appointment cancelled successfully', 'success');
         },
         error: (err) => {
-          console.error('Cancel error:', err);
+         
           this.error = err.message || 'Failed to cancel appointment';
           this.loading = false;
           this.showSnackbar(this.error || 'Failed to cancel appointment', 'error');

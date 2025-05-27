@@ -67,7 +67,7 @@ export class AuthService {
       }),
      
       catchError(error => {
-        console.warn('Backend logout failed, performing local logout:', error);
+        
         return localLogout;
       })
     );
@@ -106,7 +106,7 @@ export class AuthService {
         token,
       };
     } catch (error) {
-      console.error('Token decode error:', error);
+      
       localStorage.removeItem('token'); 
       return null;
     }

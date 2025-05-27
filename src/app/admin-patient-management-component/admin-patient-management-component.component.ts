@@ -59,7 +59,7 @@ export class AdminPatientManagementComponent implements OnInit {
       },
       error: (err) => {
         this.error = err.error.message || 'Failed to load patients';
-        console.error('Error loading patients:', err);
+        
       },
     });
   }
@@ -85,7 +85,7 @@ export class AdminPatientManagementComponent implements OnInit {
           });
         },
         error: (err) => {
-          console.error('Error deleting patient:', err);
+          
           this.error = err.error.message || 'Failed to delete patient';
           this.snackBar.open('Failed to delete patient', 'Close', {
             duration: 3000,

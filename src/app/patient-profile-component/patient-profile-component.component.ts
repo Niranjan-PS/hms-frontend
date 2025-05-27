@@ -96,7 +96,7 @@ export class PatientProfileComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        console.error('Error loading patient:', err);
+        
         this.error = 'Failed to load patient profile';
         this.showSnackbar('Failed to load patient profile', 'error');
         this.loading = false;
@@ -173,7 +173,7 @@ export class PatientProfileComponent implements OnInit {
           }
         },
         error: (err) => {
-          console.error('Error updating profile:', err);
+          
           this.error = err.error?.message || 'Failed to update profile';
           this.showSnackbar(this.error || 'Failed to update profile', 'error');
           this.loading = false;
@@ -189,7 +189,7 @@ export class PatientProfileComponent implements OnInit {
           this.router.navigate(['/patient']);
         },
         error: (err) => {
-          console.error('Error creating profile:', err);
+          
           this.error = err.error?.message || 'Failed to create profile';
           this.showSnackbar(this.error || 'Failed to create profile', 'error');
           this.loading = false;
@@ -211,7 +211,7 @@ export class PatientProfileComponent implements OnInit {
         this.appointments = appointments;
       },
       error: (err) => {
-        console.error('Fetch appointments error:', err);
+       
         this.error = 'Failed to load appointments';
       },
     });

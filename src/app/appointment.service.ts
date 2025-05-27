@@ -45,22 +45,22 @@ export class AppointmentService {
   }
 
   getAppointments(): Observable<Appointment[]> {
-    console.log('AppointmentService - Getting appointments');
+    
 
     return this.http.get<ApiResponse<Appointment>>(this.apiUrl, {
       headers: this.getAuthHeaders(),
     }).pipe(
       map(response => {
-        console.log('AppointmentService - Appointments response:', response);
+        
         if (response.success && response.appointments) {
           return response.appointments;
         } else {
-          console.error('AppointmentService - Invalid response format:', response);
+          
           throw new Error(response.error || 'Invalid response format from server');
         }
       }),
       catchError((error: HttpErrorResponse) => {
-        console.error('AppointmentService - HTTP Error getting appointments:', error);
+    
 
         let errorMessage = 'Failed to load appointments';
 
@@ -83,22 +83,22 @@ export class AppointmentService {
     );
   }
   getDoctorAppointments(): Observable<{ success: boolean; appointments: Appointment[] }> {
-    console.log('AppointmentService - Getting doctor appointments');
+    
 
     return this.http.get<{ success: boolean; appointments: Appointment[] }>(`${this.apiUrl}/doctor`, {
       headers: this.getAuthHeaders(),
     }).pipe(
       map(response => {
-        console.log('AppointmentService - Doctor appointments response:', response);
+      
         if (response.success && response.appointments) {
           return response;
         } else {
-          console.error('AppointmentService - Invalid response format:', response);
+          
           throw new Error('Invalid response format from server');
         }
       }),
       catchError((error: HttpErrorResponse) => {
-        console.error('AppointmentService - HTTP Error getting doctor appointments:', error);
+     
 
         let errorMessage = 'Failed to load appointments';
 
@@ -136,7 +136,7 @@ export class AppointmentService {
   }
 
   updateAppointment(id: string, appointment: Partial<Appointment>): Observable<Appointment> {
-    console.log('AppointmentService - Updating appointment:', { id, appointment });
+   
 
     if (!id) {
       throw new Error('Appointment ID is required');
@@ -146,20 +146,20 @@ export class AppointmentService {
       headers: this.getAuthHeaders(),
     }).pipe(
       map(response => {
-        console.log('AppointmentService - Update response:', response);
+        
         if (response.success && response.appointment) {
           return response.appointment;
         } else {
-          console.error('AppointmentService - Update failed:', response);
+          
           throw new Error(response.error || 'Failed to update appointment');
         }
       }),
       catchError((error: HttpErrorResponse) => {
-        console.error('AppointmentService - HTTP Error during update:', error);
+        
 
         let errorMessage = 'Failed to update appointment';
 
-        // Handle different types of errors
+        
         if (error.status === 404) {
           errorMessage = 'Appointment not found';
         } else if (error.status === 403) {
@@ -180,7 +180,7 @@ export class AppointmentService {
   }
 
   cancelAppointment(id: string): Observable<{ message: string }> {
-    console.log('AppointmentService - Cancelling appointment:', id);
+    
 
     if (!id) {
       throw new Error('Appointment ID is required');
@@ -190,16 +190,16 @@ export class AppointmentService {
       headers: this.getAuthHeaders(),
     }).pipe(
       map(response => {
-        console.log('AppointmentService - Cancel response:', response);
+
         if (response.success) {
           return { message: response.message || 'Appointment cancelled successfully' };
         } else {
-          console.error('AppointmentService - Cancel failed:', response);
+          
           throw new Error(response.error || 'Failed to cancel appointment');
         }
       }),
       catchError((error: HttpErrorResponse) => {
-        console.error('AppointmentService - HTTP Error during cancel:', error);
+        
 
         let errorMessage = 'Failed to cancel appointment';
 

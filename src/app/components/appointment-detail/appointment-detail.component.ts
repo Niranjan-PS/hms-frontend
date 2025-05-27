@@ -89,7 +89,7 @@ export class AppointmentDetailComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        console.error('Fetch error:', err);
+        
         this.error = 'Failed to load appointment';
         this.loading = false;
 
@@ -104,10 +104,6 @@ export class AppointmentDetailComponent implements OnInit {
   }
 
   onSubmit(): void {
-    console.log('AppointmentDetail - Submit triggered');
-    console.log('AppointmentDetail - Form valid:', this.appointmentForm.valid);
-    console.log('AppointmentDetail - Appointment ID:', this.appointment?._id);
-    console.log('AppointmentDetail - Form value:', this.appointmentForm.value);
 
     if (!this.appointmentForm.valid) {
       this.error = 'Please fill all required fields correctly';
@@ -124,14 +120,14 @@ export class AppointmentDetailComponent implements OnInit {
 
     const updates = this.appointmentForm.value;
 
-    // Validate patient restrictions
+    
     if (this.isPatient && updates.status && updates.status !== 'cancelled') {
       this.error = 'Patients can only cancel appointments';
       this.showErrorSnackbar('Patients can only cancel appointments');
       return;
     }
 
-    // Validate required fields
+    
     if (!updates.date || !updates.reason) {
       this.error = 'Date and reason are required';
       this.showErrorSnackbar('Date and reason are required');
@@ -142,14 +138,11 @@ export class AppointmentDetailComponent implements OnInit {
     this.error = null;
     this.success = null;
 
-    console.log('AppointmentDetail - Sending update request:', {
-      appointmentId: this.appointment._id,
-      updates: updates
-    });
+    
 
     this.appointmentService.updateAppointment(this.appointment._id, updates).subscribe({
       next: (updatedAppointment: Appointment) => {
-        console.log('AppointmentDetail - Update successful:', updatedAppointment);
+       
         this.appointment = updatedAppointment;
         this.success = 'Appointment updated successfully!';
         this.loading = false;
@@ -158,7 +151,7 @@ export class AppointmentDetailComponent implements OnInit {
         setTimeout(() => this.router.navigate(['/appointments']), 2000);
       },
       error: (err: any) => {
-        console.error('AppointmentDetail - Update error:', err);
+       
         this.error = err.message || 'Failed to update appointment';
         this.loading = false;
 
@@ -203,11 +196,9 @@ export class AppointmentDetailComponent implements OnInit {
       this.error = null;
       this.success = null;
 
-      console.log('AppointmentDetail - Cancelling appointment:', this.appointment._id);
 
       this.appointmentService.cancelAppointment(this.appointment._id).subscribe({
         next: () => {
-          console.log('AppointmentDetail - Cancel successful');
           this.success = 'Appointment cancelled!';
           this.loading = false;
 
@@ -215,7 +206,6 @@ export class AppointmentDetailComponent implements OnInit {
           setTimeout(() => this.router.navigate(['/appointments']), 2000);
         },
         error: (err: any) => {
-          console.error('AppointmentDetail - Cancel error:', err);
           this.error = err.message || 'Failed to cancel appointment';
           this.loading = false;
 
