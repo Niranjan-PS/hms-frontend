@@ -39,10 +39,10 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Clear any previous login errors
+    
     this.error = null;
 
-    // Check if already logged in
+    
     if (this.authService.isLoggedIn()) {
       this.redirectBasedOnRole();
     }

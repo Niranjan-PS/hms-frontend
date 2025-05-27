@@ -71,15 +71,15 @@ export class PatientProfileComponent implements OnInit {
     this.loading = true;
     const user = this.authService.getCurrentUser();
 
-    // Check if this is an admin viewing a patient's profile
+    
     this.patientId = this.route.snapshot.params['id'];
     this.isAdminView = !!this.patientId && user?.role === 'admin';
 
     if (this.isAdminView) {
-      // Admin viewing specific patient
+      
       this.loadPatientById(this.patientId!);
     } else if (user && user.role === 'patient') {
-      // Patient viewing their own profile
+      
       this.loadCurrentPatient();
     } else {
       this.error = 'Unauthorized access';
@@ -158,14 +158,14 @@ export class PatientProfileComponent implements OnInit {
     this.loading = true;
 
     if (this.patient) {
-      // Update existing profile
+     
       this.patientService.updatePatient(this.patient._id!, this.profileForm.value).subscribe({
         next: (patient) => {
           this.patient = patient;
           this.showSnackbar('Profile updated successfully', 'success');
           this.loading = false;
 
-          // Navigate based on user role
+         
           if (this.isAdminView) {
             this.router.navigate(['/admin/patients']);
           } else {
@@ -180,7 +180,7 @@ export class PatientProfileComponent implements OnInit {
         },
       });
     } else {
-      // Create new profile
+      
       this.patientService.createPatient(this.profileForm.value).subscribe({
         next: (patient) => {
           this.patient = patient;

@@ -13,25 +13,24 @@ export class PatientService {
   private apiUrl = 'http://localhost:5000/api/patients';
 
   constructor(private http: HttpClient, private authService: AuthService) {}
-   // Helper function to get headers with JWT token
+   
   private getAuthHeaders(): HttpHeaders {
-    const token = this.authService.getToken(); // You must implement this in AuthService
+    const token = this.authService.getToken(); 
     return new HttpHeaders({
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     });
   }
 
-  // Create patient profile
+ 
  createPatient(patient: Patient): Observable<Patient> {
   return this.http.post<Patient>(this.apiUrl, patient, {
-    headers: this.getAuthHeaders(), // ✅ Include auth headers
+    headers: this.getAuthHeaders(), 
 
   });
 }
 
 
-  // Get patient profile by ID
   getPatient(id: string): Observable<Patient> {
     console.log('PatientService - Getting patient:', id);
 
@@ -68,7 +67,7 @@ export class PatientService {
     );
   }
 
-  // Get all patients (admin only)
+  
   getAllPatients(): Observable<Patient[]> {
     return this.http.get<{success: boolean, count: number, patients: Patient[]}>(
       this.apiUrl,
@@ -80,7 +79,7 @@ export class PatientService {
 
 
 
-  // Update patient profile
+  
   updatePatient(id: string, patient: Partial<Patient>): Observable<Patient> {
     return this.http.put<Patient>(`${this.apiUrl}/${id}`, patient,{
         headers: this.getAuthHeaders(),
@@ -88,7 +87,6 @@ export class PatientService {
 
   }
 
-  // Delete patient profile (admin only)
   deletePatient(id: string): Observable<{ success: boolean, message: string, patientId: string }> {
     return this.http.delete<{ success: boolean, message: string, patientId: string }>(
       `${this.apiUrl}/${id}`,
@@ -96,7 +94,7 @@ export class PatientService {
     );
   }
 
-  // Get current patient's profile
+ 
   getCurrentPatient(): Observable<Patient> {
     return this.http.get<Patient>(`${this.apiUrl}/current`, {
       headers: this.getAuthHeaders()

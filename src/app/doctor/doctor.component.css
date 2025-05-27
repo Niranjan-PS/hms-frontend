@@ -1,4 +1,4 @@
-/* Doctor Dashboard - Optimized */
+
 .dashboard-content { display: flex; flex-direction: column; gap: 24px; }
 
 .profile-card:hover { transform: translateY(-5px); }

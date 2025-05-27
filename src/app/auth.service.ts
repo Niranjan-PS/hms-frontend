@@ -10,11 +10,11 @@ import { AuthResponse, User } from './auth';
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:5000/api/auth'; // Adjust to your backend URL
+  private apiUrl = 'http://localhost:5000/api/auth'; 
   private userSubject = new BehaviorSubject<AuthResponse | null>(null);
 
   constructor(private http: HttpClient) {
-    // Initialize user state from token on app load
+    
     const token = this.getToken();
     if (token) {
       const user = this.decodeToken(token);
@@ -22,7 +22,7 @@ export class AuthService {
     }
   }
 
-  // Register user
+  
   register(userData: User): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/register`, userData).pipe(
       tap((response) => {
@@ -34,7 +34,7 @@ export class AuthService {
     );
   }
 
-  // Login user
+ 
   login(credentials: { email: string; password: string }): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials).pipe(
       tap((response) => {
@@ -46,26 +46,26 @@ export class AuthService {
     );
   }
 
-  // Logout user
+  
   logout(): Observable<any> {
-    // Create an observable that will complete immediately after clearing local data
+    
     const localLogout = new Observable(observer => {
-      // Clear token from localStorage
+      
       localStorage.removeItem('token');
-      // Update user subject
+      
       this.userSubject.next(null);
-      // Complete the observable
+    
       observer.next({ success: true });
       observer.complete();
     });
 
-    // Try to call the backend logout endpoint, but fall back to local logout if it fails
+    
     return this.http.post(`${this.apiUrl}/logout`, {}).pipe(
       tap(() => {
         localStorage.removeItem('token');
         this.userSubject.next(null);
       }),
-      // If the HTTP request fails, still perform local logout
+     
       catchError(error => {
         console.warn('Backend logout failed, performing local logout:', error);
         return localLogout;
@@ -73,28 +73,28 @@ export class AuthService {
     );
   }
 
-  // Get token
+ 
   getToken(): string | null {
     return localStorage.getItem('token');
   }
 
-  // Get current user
+ 
   getCurrentUser(): AuthResponse | null {
     return this.userSubject.value;
   }
 
-  // Get user role
+ 
   getUserRole(): string | null {
     const user = this.getCurrentUser();
     return user ? user.role : null;
   }
 
-  // Check if user is logged in
+ 
   isLoggedIn(): boolean {
     return !!this.getToken();
   }
 
-  // Decode token to get user data
+ 
   private decodeToken(token: string): AuthResponse | null {
     try {
       const decoded: any = jwtDecode(token);
@@ -107,12 +107,12 @@ export class AuthService {
       };
     } catch (error) {
       console.error('Token decode error:', error);
-      localStorage.removeItem('token'); // Remove invalid token
+      localStorage.removeItem('token'); 
       return null;
     }
   }
 
-  // Get the dashboard route based on user role
+ 
   getRoleDashboardRoute(): string {
     const role = this.getUserRole();
     switch (role) {
@@ -127,13 +127,11 @@ export class AuthService {
     }
   }
 
-  // Perform a local logout without calling the backend
-  // This is useful as a fallback or for situations where the backend call is not necessary
   logoutLocally(): void {
     localStorage.removeItem('token');
     this.userSubject.next(null);
   }
 
-  // Observable for user state
+  
   user$ = this.userSubject.asObservable();
 }

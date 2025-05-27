@@ -42,10 +42,10 @@ export class RegisterComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Clear any previous registration errors
+   
     this.error = null;
 
-    // Check if already logged in
+    
     if (this.authService.isLoggedIn()) {
       this.redirectBasedOnRole();
     }

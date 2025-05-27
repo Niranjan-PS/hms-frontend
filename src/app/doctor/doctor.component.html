@@ -1,14 +1,14 @@
 
 <div class="doctor-dashboard-container">
-  <!-- Loading spinner -->
+ 
   <div *ngIf="loading" class="loading-container">
     <mat-spinner diameter="50"></mat-spinner>
     <p>Loading dashboard...</p>
   </div>
 
-  <!-- Main content when loaded -->
+  
   <div *ngIf="!loading" class="dashboard-content">
-    <!-- Doctor profile card -->
+  
     <mat-card class="profile-card" *ngIf="doctor">
       <mat-card-header>
         <div mat-card-avatar class="doctor-avatar">
@@ -38,7 +38,7 @@
       </mat-card-content>
     </mat-card>
 
-    <!-- Success and error messages -->
+   
     <div *ngIf="success" class="success-message">
       <mat-icon>check_circle</mat-icon>
       <span>{{ success }}</span>
@@ -49,9 +49,9 @@
       <span>{{ error }}</span>
     </div>
 
-    <!-- Main tabs for different sections -->
+   
     <mat-tab-group (selectedTabChange)="tabChanged($event)" [selectedIndex]="activeTabIndex" animationDuration="300ms" class="dashboard-tabs">
-      <!-- Availability Management Tab -->
+     
       <mat-tab label="Manage Availability">
         <div class="tab-content">
           <mat-card class="availability-card">
@@ -120,7 +120,7 @@
         </div>
       </mat-tab>
 
-      <!-- Appointments Tab -->
+      
       <mat-tab label="My Appointments">
         <div class="tab-content">
           <mat-card class="appointments-card">
@@ -136,22 +136,22 @@
             </mat-card-header>
 
             <mat-card-content>
-              <!-- Loading state for appointments -->
+             
               <div *ngIf="loading" class="loading-section">
                 <mat-spinner diameter="40"></mat-spinner>
                 <p>Loading appointments...</p>
               </div>
 
-              <!-- No appointments message -->
+              
               <div *ngIf="!loading && appointments.length === 0" class="no-data-message">
                 <mat-icon>event_busy</mat-icon>
                 <p>No appointments found</p>
                 <span class="no-data-subtitle">Appointments will appear here once patients book with you</span>
               </div>
 
-              <!-- Appointments table -->
+              
               <table mat-table [dataSource]="appointments" class="appointments-table" *ngIf="!loading && appointments.length > 0">
-                <!-- Patient Column -->
+                
                 <ng-container matColumnDef="patient">
                   <th mat-header-cell *matHeaderCellDef>Patient</th>
                   <td mat-cell *matCellDef="let appointment">
@@ -162,19 +162,19 @@
                   </td>
                 </ng-container>
 
-                <!-- Date Column -->
+                
                 <ng-container matColumnDef="date">
                   <th mat-header-cell *matHeaderCellDef>Date & Time</th>
                   <td mat-cell *matCellDef="let appointment">{{ appointment.date | date:'medium' }}</td>
                 </ng-container>
 
-                <!-- Reason Column -->
+                
                 <ng-container matColumnDef="reason">
                   <th mat-header-cell *matHeaderCellDef>Reason</th>
                   <td mat-cell *matCellDef="let appointment">{{ appointment.reason }}</td>
                 </ng-container>
 
-                <!-- Status Column -->
+                
                 <ng-container matColumnDef="status">
                   <th mat-header-cell *matHeaderCellDef>Status</th>
                   <td mat-cell *matCellDef="let appointment">
@@ -184,7 +184,7 @@
                   </td>
                 </ng-container>
 
-                <!-- Actions Column -->
+               
                 <ng-container matColumnDef="actions">
                   <th mat-header-cell *matHeaderCellDef>Actions</th>
                   <td mat-cell *matCellDef="let appointment">
@@ -209,7 +209,7 @@
         </div>
       </mat-tab>
 
-      <!-- Patients Tab -->
+      
       <mat-tab label="My Patients">
         <div class="tab-content">
           <mat-card class="patients-card">
@@ -220,40 +220,40 @@
             </mat-card-header>
 
             <mat-card-content>
-              <!-- Loading state for patients -->
+              
               <div *ngIf="loading" class="loading-section">
                 <mat-spinner diameter="40"></mat-spinner>
                 <p>Loading patients...</p>
               </div>
 
-              <!-- No patients message -->
+             
               <div *ngIf="!loading && patients.length === 0" class="no-data-message">
                 <mat-icon>person_off</mat-icon>
                 <p>No patients found</p>
                 <span class="no-data-subtitle">Patients will appear here once they book appointments with you</span>
               </div>
 
-              <!-- Patients table -->
+             
               <table mat-table [dataSource]="patients" class="patients-table" *ngIf="!loading && patients.length > 0">
-                <!-- Name Column -->
+                
                 <ng-container matColumnDef="name">
                   <th mat-header-cell *matHeaderCellDef>Name</th>
                   <td mat-cell *matCellDef="let patient">{{ patient.name }}</td>
                 </ng-container>
 
-                <!-- Gender Column -->
+                
                 <ng-container matColumnDef="gender">
                   <th mat-header-cell *matHeaderCellDef>Gender</th>
                   <td mat-cell *matCellDef="let patient">{{ patient.gender }}</td>
                 </ng-container>
 
-                <!-- Phone Column -->
+                
                 <ng-container matColumnDef="phone">
                   <th mat-header-cell *matHeaderCellDef>Phone</th>
                   <td mat-cell *matCellDef="let patient">{{ patient.phone }}</td>
                 </ng-container>
 
-                <!-- Actions Column -->
+                
                 <ng-container matColumnDef="actions">
                   <th mat-header-cell *matHeaderCellDef>Actions</th>
                   <td mat-cell *matCellDef="let patient">

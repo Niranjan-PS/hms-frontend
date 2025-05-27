@@ -16,7 +16,5 @@ export class PatientComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    // This is just a layout container component
-    // All data loading is handled by child components
   }
 }

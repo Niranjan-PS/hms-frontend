@@ -2,12 +2,12 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 
-// Components
+
 import { DoctorCreateComponent } from '../../components/doctor-create/doctor-create.component';
 import { DoctorListComponent } from '../../components/doctor-list/doctor-list.component';
 import { DoctorProfileComponent } from '../../components/doctor-profile/doctor-profile.component';
 
-// Guards
+
 import { AuthGuard } from '../../auth.guard';
 import { AdminGuard } from '../../guards/admin.guard';
 

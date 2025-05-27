@@ -2,14 +2,14 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 
-// Components
+
 import { PatientComponent } from '../../patient/patient.component';
 import { PatientDashboardHomeComponent } from '../../components/patient-dashboard-home/patient-dashboard-home.component';
 import { PatientProfileComponent } from '../../patient-profile-component/patient-profile-component.component';
 import { PatientDoctorListComponent } from '../../components/patient-doctor-list/patient-doctor-list.component';
 import { AboutUsComponent } from '../../components/about-us/about-us.component';
 
-// Guards
+
 import { AuthGuard } from '../../auth.guard';
 import { RoleGuard } from '../../role.guard';
 

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { AuthService } from '../auth.service';
-// Update the import path if AuthService is located elsewhere, for example:
+
 
 
 @Injectable({

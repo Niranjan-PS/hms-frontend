@@ -5,7 +5,7 @@
 }
 
 .with-nav {
-  padding-top: 1px; /* Height of the navbar */
+  padding-top: 1px; 
 }
 
 .full-height {
@@ -14,6 +14,6 @@
 
 @media (max-width: 768px) {
   .with-nav {
-    padding-top: 56px; /* Smaller navbar height on mobile */
+    padding-top: 56px; 
   }
 }

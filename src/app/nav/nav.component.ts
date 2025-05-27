@@ -32,15 +32,13 @@ export class NavComponent {
 
   logout(): void {
     try {
-      // First try the regular logout that calls the backend
+      
       this.authService.logout().subscribe({
         next: () => {
-          console.log('Logout successful');
+         
           this.router.navigate(['/login']);
         },
         error: (err) => {
-          console.error('Logout error:', err);
-          // If the backend logout fails, use the local logout
           this.handleLocalLogout();
         },
         complete: () => {
@@ -48,17 +46,13 @@ export class NavComponent {
         }
       });
     } catch (error) {
-      console.error('Unexpected error during logout:', error);
-      // If any unexpected error occurs, fall back to local logout
       this.handleLocalLogout();
     }
   }
 
-  // Handle local logout and navigation
-  // This is public because it's called from the template
   handleLocalLogout(): void {
     this.authService.logoutLocally();
-    console.log('Local logout performed');
+  
     this.router.navigate(['/login']);
   }
 }
