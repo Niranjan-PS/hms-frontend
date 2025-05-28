@@ -5,12 +5,13 @@ import { tap, catchError } from 'rxjs/operators';
 
 import { jwtDecode } from 'jwt-decode';
 import { AuthResponse, User } from './auth';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:5000/api/auth'; 
+  private apiUrl = `${environment.apiUrl}/api/auth`; 
   private userSubject = new BehaviorSubject<AuthResponse | null>(null);
 
   constructor(private http: HttpClient) {

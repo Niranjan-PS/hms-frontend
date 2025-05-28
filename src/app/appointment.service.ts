@@ -4,6 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 import { Appointment } from './appointment';
+import { environment } from '../environments/environment';
 
 export interface ApiResponse<T> {
   success: boolean;
@@ -18,7 +19,7 @@ export interface ApiResponse<T> {
   providedIn: 'root',
 })
 export class AppointmentService {
-  private apiUrl = 'http://localhost:5000/api/appointments';
+  private apiUrl = `${environment.apiUrl}/api/appointments`;
   constructor(private http: HttpClient, private authService: AuthService) {}
 
   private getAuthHeaders(): HttpHeaders {
