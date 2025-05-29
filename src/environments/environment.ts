@@ -1,1 +1,1 @@
-export const environment = { production: false, apiUrl: 'https://hms-backend-xed5.onrender.com/api' }; 
+export const environment = { production: false, apiUrl: 'https://hms-backend-xed5.onrender.com' }; 
