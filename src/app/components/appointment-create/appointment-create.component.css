@@ -20,7 +20,7 @@
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
   background-color: white;
   transition: box-shadow 0.3s ease;
- 
+
 }
 
 .appointment-card:hover {
@@ -48,7 +48,7 @@ mat-card-subtitle {
 
 mat-card-content {
   padding: 0 24px 24px 24px;
- 
+
   overflow: visible !important;
   position: relative;
 }
@@ -293,7 +293,7 @@ mat-form-field:nth-child(3) { animation-delay: 0.3s; }
 }
 
 .appointment-card:hover {
-  
+
   transform: none !important;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
 }
@@ -312,4 +312,68 @@ mat-card-content {
 .availability-section {
   margin-top: 16px;
   clear: both;
+}
+
+/* Time Selection Row */
+.time-selection-row {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.time-field {
+  flex: 2;
+}
+
+.period-field {
+  flex: 1;
+  min-width: 120px;
+}
+
+/* DateTime Error */
+.datetime-error {
+  margin-bottom: 16px;
+  padding: 8px 12px;
+  background-color: #ffebee;
+  border-radius: 4px;
+  border-left: 4px solid #f44336;
+}
+
+.datetime-error mat-error {
+  color: #f44336;
+  font-size: 14px;
+  margin: 0;
+}
+
+/* Availability Hint */
+.availability-hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding: 12px;
+  background-color: #e3f2fd;
+  border-radius: 4px;
+  color: #1976d2;
+  font-size: 14px;
+}
+
+.availability-hint mat-icon {
+  color: #1976d2;
+  font-size: 18px;
+}
+
+/* Responsive Design for Time Selection */
+@media (max-width: 600px) {
+  .time-selection-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .time-field,
+  .period-field {
+    flex: 1;
+    width: 100%;
+  }
 }

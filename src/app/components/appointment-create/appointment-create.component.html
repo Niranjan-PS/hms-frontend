@@ -7,26 +7,26 @@
     </mat-card-header>
 
     <mat-card-content>
-     
+
       <div *ngIf="loading" class="loading-container">
         <mat-spinner diameter="40"></mat-spinner>
         <p>Loading...</p>
       </div>
 
-      
+
       <div *ngIf="success" class="success-message">
         <mat-icon>check_circle</mat-icon>
         <span>{{ success }}</span>
       </div>
 
-      
+
       <div *ngIf="error" class="error-message">
         <mat-icon>error</mat-icon>
         <span>{{ error }}</span>
       </div>
 
       <form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()" *ngIf="!loading || doctors.length > 0">
-        
+
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Select Doctor</mat-label>
           <mat-select
@@ -45,7 +45,7 @@
           </mat-error>
         </mat-form-field>
 
-        
+
         <div *ngIf="selectedDoctor && selectedDoctor.availability && selectedDoctor.availability.length > 0"
              class="availability-section">
           <div class="availability-header">
@@ -61,7 +61,7 @@
           </mat-list>
         </div>
 
-       
+
         <div *ngIf="selectedDoctor" class="doctor-availability-info">
           <mat-card class="availability-card">
             <mat-card-content>
@@ -73,7 +73,8 @@
           </mat-card>
         </div>
 
-       
+
+        <!-- Date Selection -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Appointment Date</mat-label>
           <input matInput
@@ -86,27 +87,49 @@
           <mat-error *ngIf="hasFieldError('appointmentDate')">
             {{ getFieldError('appointmentDate') }}
           </mat-error>
-          <mat-error *ngIf="hasDateError()">
-            Please select a future date
-          </mat-error>
         </mat-form-field>
 
-        
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Appointment Time</mat-label>
-          <input matInput
-                 formControlName="appointmentTime"
-                 type="time"
-                 required>
-          <mat-icon matPrefix>access_time</mat-icon>
-          <mat-hint *ngIf="selectedDoctor">{{ getDoctorAvailableHours() }}</mat-hint>
-          <mat-hint *ngIf="!selectedDoctor">Please select a doctor first</mat-hint>
-          <mat-error *ngIf="hasFieldError('appointmentTime')">
-            {{ getFieldError('appointmentTime') }}
-          </mat-error>
-        </mat-form-field>
+        <!-- Time Selection Row -->
+        <div class="time-selection-row">
+          <!-- Time Input -->
+          <mat-form-field appearance="outline" class="time-field">
+            <mat-label>Time</mat-label>
+            <input matInput
+                   formControlName="appointmentTime"
+                   type="time"
+                   required>
+            <mat-icon matPrefix>access_time</mat-icon>
+            <mat-error *ngIf="hasFieldError('appointmentTime')">
+              {{ getFieldError('appointmentTime') }}
+            </mat-error>
+          </mat-form-field>
 
-       
+          <!-- AM/PM Selection -->
+          <mat-form-field appearance="outline" class="period-field">
+            <mat-label>Period</mat-label>
+            <mat-select formControlName="appointmentPeriod" required>
+              <mat-option value="AM">AM</mat-option>
+              <mat-option value="PM">PM</mat-option>
+            </mat-select>
+            <mat-icon matPrefix>schedule</mat-icon>
+            <mat-error *ngIf="hasFieldError('appointmentPeriod')">
+              {{ getFieldError('appointmentPeriod') }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Time Validation Error -->
+        <div *ngIf="hasDateTimeError()" class="datetime-error">
+          <mat-error>{{ getDateTimeValidationError() }}</mat-error>
+        </div>
+
+        <!-- Doctor Availability Hint -->
+        <div *ngIf="selectedDoctor" class="availability-hint">
+          <mat-icon>info</mat-icon>
+          <span>{{ getDoctorAvailableHours() }}</span>
+        </div>
+
+
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Reason for Appointment</mat-label>
           <textarea matInput formControlName="reason" rows="4" required
@@ -118,7 +141,7 @@
           </mat-error>
         </mat-form-field>
 
-        
+
         <div class="form-actions">
           <button mat-raised-button color="primary" type="submit"
                   [disabled]="loading" class="submit-button">

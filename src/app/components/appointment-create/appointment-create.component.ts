@@ -2,8 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Doctor, DoctorService } from '../../services/doctor.service';
 import { AppointmentService } from '../../appointment.service';
+import { TimezoneService } from '../../services/timezone.service';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { DateTime } from 'luxon';
 
 
 import { MatCardModule } from '@angular/material/card';
@@ -50,13 +52,15 @@ export class AppointmentCreateComponent implements OnInit {
     private fb: FormBuilder,
     private appointmentService: AppointmentService,
     private doctorService: DoctorService,
+    private timezoneService: TimezoneService,
     private router: Router,
     private snackBar: MatSnackBar
   ) {
     this.appointmentForm = this.fb.group({
       doctor: ['', Validators.required],
-      appointmentDate: ['', Validators.required],
+      appointmentDate: [{ value: '', disabled: true }, Validators.required],
       appointmentTime: [{ value: '', disabled: true }, Validators.required],
+      appointmentPeriod: [{ value: 'AM', disabled: true }, Validators.required],
       reason: ['', [Validators.required, Validators.maxLength(500)]],
     });
   }
@@ -93,37 +97,47 @@ export class AppointmentCreateComponent implements OnInit {
   onDoctorSelected(doctorId: string): void {
     this.selectedDoctor = this.doctors.find(doctor => doctor._id === doctorId) || null;
 
+    const dateControl = this.appointmentForm.get('appointmentDate');
     const timeControl = this.appointmentForm.get('appointmentTime');
+    const periodControl = this.appointmentForm.get('appointmentPeriod');
 
-    console.log('Doctor selected:', { doctorId, selectedDoctor: this.selectedDoctor, timeControl: timeControl?.disabled });
+    console.log('Doctor selected:', { doctorId, selectedDoctor: this.selectedDoctor });
 
-    if (this.selectedDoctor && timeControl) {
+    if (this.selectedDoctor) {
       
-      timeControl.enable();
-      timeControl.setValue('');
-      console.log('Time field enabled');
-    } else if (timeControl) {
-    
-      timeControl.disable();
-      timeControl.setValue('');
-      console.log('Time field disabled');
+      dateControl?.enable();
+      timeControl?.enable();
+      periodControl?.enable();
+
+      dateControl?.setValue('');
+      timeControl?.setValue('');
+      periodControl?.setValue('AM');
+
+      console.log('Date/Time fields enabled');
+    } else {
+      
+      dateControl?.disable();
+      timeControl?.disable();
+      periodControl?.disable();
+
+      dateControl?.setValue('');
+      timeControl?.setValue('');
+      periodControl?.setValue('AM');
+
+      console.log('Date/Time fields disabled');
     }
   }
 
- 
+
   getDoctorAvailableHours(): string {
     if (!this.selectedDoctor?.availability || this.selectedDoctor.availability.length === 0) {
       return 'No availability set';
     }
 
-    const availabilityText = this.selectedDoctor.availability
-      .map(slot => `${slot.day}: ${this.formatTime(slot.startTime)} – ${this.formatTime(slot.endTime)}`)
-      .join(', ');
-
-    return `Available: ${availabilityText}`;
+    return this.timezoneService.formatAvailabilityForDisplay(this.selectedDoctor.availability);
   }
 
-  
+
   formatTime(time: string): string {
     if (!time) return '';
 
@@ -135,25 +149,84 @@ export class AppointmentCreateComponent implements OnInit {
     return `${displayHour}:${minutes} ${ampm}`;
   }
 
+
+  isValidDateTime(): boolean {
+    const date = this.appointmentForm.get('appointmentDate')?.value;
+    const time = this.appointmentForm.get('appointmentTime')?.value;
+    const period = this.appointmentForm.get('appointmentPeriod')?.value;
+
+    if (!date || !time || !period) return true; 
+
+    const istDateTime = this.createISTDateTimeFromForm(date, time, period);
+
   
-  isValidDate(): boolean {
-    const selectedDate = this.appointmentForm.get('appointmentDate')?.value;
-    if (!selectedDate) return true; 
+    if (!this.timezoneService.isAppointmentInFuture(istDateTime)) {
+      return false;
+    }
 
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const selected = new Date(selectedDate);
+    
+    if (this.selectedDoctor?.availability) {
+      return this.timezoneService.isTimeWithinAvailability(istDateTime, this.selectedDoctor.availability);
+    }
 
-    return selected >= today;
+    return true;
+  }
+
+  
+  createISTDateTimeFromForm(date: string, time: string, period: string): any {
+    
+    const [hours, minutes] = time.split(':').map(Number);
+    let hour24 = hours;
+
+    if (period === 'PM' && hours !== 12) {
+      hour24 = hours + 12;
+    } else if (period === 'AM' && hours === 12) {
+      hour24 = 0;
+    }
+
+    const time24 = `${hour24.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+    return this.timezoneService.createISTDateTime(date, time24);
   }
 
   
   getMinDate(): string {
-    const today = new Date();
-    return today.toISOString().split('T')[0];
+    const now = this.timezoneService.getCurrentISTTime();
+    return now.toFormat('yyyy-MM-dd');
   }
 
   
+  getDateTimeValidationError(): string | null {
+    const date = this.appointmentForm.get('appointmentDate')?.value;
+    const time = this.appointmentForm.get('appointmentTime')?.value;
+    const period = this.appointmentForm.get('appointmentPeriod')?.value;
+
+    if (!date || !time || !period) return null;
+
+    const istDateTime = this.createISTDateTimeFromForm(date, time, period);
+
+    if (!this.timezoneService.isAppointmentInFuture(istDateTime)) {
+      return 'Please select a future date and time';
+    }
+
+    if (this.selectedDoctor?.availability) {
+      const availabilityDetails = this.timezoneService.getAvailabilityDetails(istDateTime, this.selectedDoctor.availability);
+
+      if (!availabilityDetails.isAvailable) {
+        const formattedTime = this.timezoneService.formatTimeToAMPM(istDateTime);
+        const dayName = istDateTime.toFormat('cccc');
+
+        if (availabilityDetails.suggestedTimes.length > 0) {
+          return `Selected time ${formattedTime} on ${dayName} is outside doctor's availability. Available times: ${availabilityDetails.suggestedTimes.join(', ')}`;
+        } else {
+          return `Doctor is not available on ${dayName}. Available times: ${this.getDoctorAvailableHours()}`;
+        }
+      }
+    }
+
+    return null;
+  }
+
+
   getFieldError(fieldName: string): string | null {
     const field = this.appointmentForm.get(fieldName);
 
@@ -169,6 +242,8 @@ export class AppointmentCreateComponent implements OnInit {
           return 'Please select an appointment date';
         case 'appointmentTime':
           return 'Please select an appointment time';
+        case 'appointmentPeriod':
+          return 'Please select AM or PM';
         case 'reason':
           return 'Please provide a reason for the appointment';
         default:
@@ -184,64 +259,89 @@ export class AppointmentCreateComponent implements OnInit {
     return null;
   }
 
-  
+
   hasFieldError(fieldName: string): boolean {
     const field = this.appointmentForm.get(fieldName);
     return !!(field && field.errors && field.touched);
   }
 
-  
-  hasDateError(): boolean {
-    const dateField = this.appointmentForm.get('appointmentDate');
-    return !!(dateField && dateField.touched && dateField.value && !this.isValidDate());
-  }
 
   
+  hasDateTimeError(): boolean {
+    const dateField = this.appointmentForm.get('appointmentDate');
+    const timeField = this.appointmentForm.get('appointmentTime');
+    const periodField = this.appointmentForm.get('appointmentPeriod');
+
+    const fieldsAreTouched = (dateField?.touched || timeField?.touched || periodField?.touched);
+    const fieldsHaveValues = (dateField?.value && timeField?.value && periodField?.value);
+
+    return !!(fieldsAreTouched && fieldsHaveValues && !this.isValidDateTime());
+  }
+
+
   isFormValidForSubmission(): boolean {
     const doctorControl = this.appointmentForm.get('doctor');
     const dateControl = this.appointmentForm.get('appointmentDate');
     const timeControl = this.appointmentForm.get('appointmentTime');
+    const periodControl = this.appointmentForm.get('appointmentPeriod');
     const reasonControl = this.appointmentForm.get('reason');
 
     const doctorValid = !!(doctorControl?.value);
-    const dateValid = !!(dateControl?.value) && this.isValidDate();
+    const dateValid = !!(dateControl?.value);
+    const timeValid = !!(timeControl?.value);
+    const periodValid = !!(periodControl?.value);
     const reasonValid = !!(reasonControl?.value);
+    const datetimeValid = dateValid && timeValid && periodValid && this.isValidDateTime();
 
-   
-    const timeValid = timeControl?.disabled ? true : !!(timeControl?.value);
 
-    
     if (!doctorValid) {
       return false;
     }
 
-    return doctorValid && dateValid && timeValid && reasonValid;
+    return doctorValid && datetimeValid && reasonValid;
   }
 
   onSubmit(): void {
-    
+
     this.markFormGroupTouched(this.appointmentForm);
 
-   
+
     const formValue = this.appointmentForm.getRawValue();
 
     const doctorValid = !!(formValue.doctor);
-    const dateValid = !!(formValue.appointmentDate) && this.isValidDate();
+    const dateValid = !!(formValue.appointmentDate);
     const timeValid = !!(formValue.appointmentTime);
+    const periodValid = !!(formValue.appointmentPeriod);
     const reasonValid = !!(formValue.reason);
+    const datetimeValid = dateValid && timeValid && periodValid && this.isValidDateTime();
 
-    console.log('Form validation:', { doctorValid, dateValid, timeValid, reasonValid, formValue });
+    console.log('Form validation:', { doctorValid, dateValid, timeValid, periodValid, reasonValid, datetimeValid, formValue });
 
-    if (doctorValid && dateValid && timeValid && reasonValid) {
-      const appointmentDateTime = `${formValue.appointmentDate}T${formValue.appointmentTime}:00`;
+    if (doctorValid && datetimeValid && reasonValid) {
+      
+      const istDateTime = this.createISTDateTimeFromForm(
+        formValue.appointmentDate,
+        formValue.appointmentTime,
+        formValue.appointmentPeriod
+      );
+      const utcDateTimeString = this.timezoneService.convertISTToUTC(istDateTime);
 
       const appointmentData = {
         doctor: formValue.doctor,
-        date: appointmentDateTime,
+        date: utcDateTimeString,
         reason: formValue.reason
       };
 
-      console.log('Submitting appointment data:', appointmentData);
+      console.log('Submitting appointment data:', {
+        originalInputs: {
+          date: formValue.appointmentDate,
+          time: formValue.appointmentTime,
+          period: formValue.appointmentPeriod
+        },
+        istDateTime: istDateTime.toISO(),
+        utcForBackend: utcDateTimeString,
+        appointmentData
+      });
 
       this.loading = true;
       this.error = null;
@@ -265,7 +365,7 @@ export class AppointmentCreateComponent implements OnInit {
         error: (err) => {
           this.loading = false;
 
-          
+
           let errorMessage = 'Failed to book appointment';
           if (err.error?.error) {
             if (err.error.error.includes('another appointment at this time') ||
@@ -289,21 +389,24 @@ export class AppointmentCreateComponent implements OnInit {
         },
       });
     } else {
-      
+
       const missingFields: string[] = [];
 
       if (!doctorValid) {
         missingFields.push('Select a doctor');
       }
       if (!dateValid) {
-        if (!formValue.appointmentDate) {
-          missingFields.push('Choose appointment date');
-        } else if (!this.isValidDate()) {
-          missingFields.push('Select a future date');
-        }
+        missingFields.push('Choose appointment date');
       }
       if (!timeValid) {
         missingFields.push('Choose appointment time');
+      }
+      if (!periodValid) {
+        missingFields.push('Select AM or PM');
+      }
+      if (dateValid && timeValid && periodValid && !this.isValidDateTime()) {
+        const errorMsg = this.getDateTimeValidationError();
+        missingFields.push(errorMsg || 'Select a valid date and time');
       }
       if (!reasonValid) {
         missingFields.push('Provide reason for appointment');
@@ -336,5 +439,4 @@ export class AppointmentCreateComponent implements OnInit {
     });
   }
 }
-
 
