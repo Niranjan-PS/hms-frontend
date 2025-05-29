@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../auth.service';
 import { HttpClient } from '@angular/common/http';
 import { forkJoin, catchError, of } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 interface DashboardStats {
   totalPatients: number;
@@ -47,8 +48,8 @@ export class AdminDashboardHomeComponent implements OnInit {
   currentUser: any;
   error: string | null = null;
 
-  // API endpoints
-  private readonly API_BASE = 'https://hms-backend-xed5.onrender.com/api';
+  
+  private readonly API_BASE = `${environment.apiUrl}/api`;
   private readonly PATIENTS_API = `${this.API_BASE}/patients`;
   private readonly DOCTORS_API = `${this.API_BASE}/doctors`;
   private readonly APPOINTMENTS_API = `${this.API_BASE}/appointments`;
