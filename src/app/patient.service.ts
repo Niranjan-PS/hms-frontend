@@ -14,8 +14,9 @@ export class PatientService {
   private apiUrl = `${environment.apiUrl}/api/patients`;
   //private apiUrl = `http://localhost:5000/api/patients`;
 
-  constructor(private http: HttpClient, private authService: AuthService) {}
-   
+  constructor(private http: HttpClient, private authService: AuthService) {
+  console.log('Using API URL:', this.apiUrl);
+  }
   private getAuthHeaders(): HttpHeaders {
     const token = this.authService.getToken(); 
     return new HttpHeaders({
