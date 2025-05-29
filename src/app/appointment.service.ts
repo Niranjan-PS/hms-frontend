@@ -20,7 +20,9 @@ export interface ApiResponse<T> {
 })
 export class AppointmentService {
   private apiUrl = `${environment.apiUrl}/api/appointments`;
-  constructor(private http: HttpClient, private authService: AuthService) {}
+  constructor(private http: HttpClient, private authService: AuthService) {
+    console.log('AppointmentService using this API URL:', this.apiUrl);
+  }
 
   private getAuthHeaders(): HttpHeaders {
     const token = this.authService ? this.authService.getToken() : '';
@@ -49,6 +51,7 @@ export class AppointmentService {
     
 
     return this.http.get<ApiResponse<Appointment>>(this.apiUrl, {
+      withCredentials: true,
       headers: this.getAuthHeaders(),
     }).pipe(
       map(response => {
