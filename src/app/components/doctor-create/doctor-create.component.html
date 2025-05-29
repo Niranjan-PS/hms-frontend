@@ -1,7 +1,7 @@
-<!-- Doctor Create Component -->
+
 <div class="doctor-create-container">
 
-  <!-- Back to Doctors Button -->
+  
   <div class="back-to-doctors-section">
     <button
       mat-flat-button
@@ -14,7 +14,7 @@
     </button>
   </div>
 
-  <!-- Header Section -->
+ 
   <mat-card class="header-card">
     <mat-card-header class="header-content">
       <div mat-card-avatar class="header-avatar">
@@ -25,13 +25,13 @@
     </mat-card-header>
   </mat-card>
 
-  <!-- Loading Spinner -->
+  
   <div *ngIf="loading" class="loading-container">
     <mat-spinner diameter="50"></mat-spinner>
     <p class="loading-text">Creating doctor profile...</p>
   </div>
 
-  <!-- Error Message -->
+  
   <mat-card *ngIf="error && !loading" class="error-card">
     <mat-card-content class="error-content">
       <mat-icon class="error-icon">error_outline</mat-icon>
@@ -39,10 +39,10 @@
     </mat-card-content>
   </mat-card>
 
-  <!-- Doctor Form -->
+ 
   <form [formGroup]="doctorForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
 
-    <!-- Personal Information Card -->
+    
     <mat-card class="form-card">
       <mat-card-header class="form-card-header">
         <div mat-card-avatar class="form-card-avatar">
@@ -104,7 +104,7 @@
       </mat-card-content>
     </mat-card>
 
-    <!-- Professional Information Card -->
+   
     <mat-card class="form-card">
       <mat-card-header class="form-card-header">
         <div mat-card-avatar class="form-card-avatar">
@@ -141,7 +141,7 @@
       </mat-card-content>
     </mat-card>
 
-    <!-- Availability Schedule Card -->
+    
     <mat-card class="form-card">
       <mat-card-header class="form-card-header">
         <div mat-card-avatar class="form-card-avatar">
@@ -154,7 +154,7 @@
       <mat-card-content class="form-card-content">
         <div formArrayName="availability">
 
-          <!-- Availability Entries -->
+         
           <div *ngFor="let avail of availability.controls; let i=index" [formGroupName]="i" class="availability-entry">
             <div class="availability-form-row">
               <mat-form-field appearance="outline" class="availability-field day-field">
@@ -191,7 +191,7 @@
               </button>
             </div>
 
-            <!-- Availability Preview Chip -->
+           
             <div *ngIf="isAvailabilityComplete(i)" class="availability-preview">
               <mat-chip class="availability-chip">
                 <mat-icon matChipAvatar>schedule</mat-icon>
@@ -200,7 +200,7 @@
             </div>
           </div>
 
-          <!-- Add Availability Button -->
+          
           <div class="add-availability-section">
             <button
               mat-stroked-button
@@ -213,7 +213,7 @@
             </button>
           </div>
 
-          <!-- Availability Summary -->
+         
           <div *ngIf="availability.length > 0" class="availability-summary">
             <mat-divider></mat-divider>
             <h4 class="summary-title">
@@ -237,7 +237,7 @@
       </mat-card-content>
     </mat-card>
 
-    <!-- Form Actions -->
+   
     <mat-card class="actions-card">
       <mat-card-content class="actions-content">
         <div class="form-actions">

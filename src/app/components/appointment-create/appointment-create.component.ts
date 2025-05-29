@@ -5,7 +5,7 @@ import { AppointmentService } from '../../appointment.service';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
-// Angular Material Imports
+
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -55,7 +55,8 @@ export class AppointmentCreateComponent implements OnInit {
   ) {
     this.appointmentForm = this.fb.group({
       doctor: ['', Validators.required],
-      date: ['', Validators.required],
+      appointmentDate: ['', Validators.required],
+      appointmentTime: [{ value: '', disabled: true }, Validators.required],
       reason: ['', [Validators.required, Validators.maxLength(500)]],
     });
   }
@@ -70,7 +71,7 @@ export class AppointmentCreateComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-       
+
         this.error = 'Failed to load doctors';
         this.loading = false;
 
@@ -83,28 +84,174 @@ export class AppointmentCreateComponent implements OnInit {
       },
     });
 
-    
+
     this.appointmentForm.get('doctor')?.valueChanges.subscribe(doctorId => {
-      this.selectedDoctor = this.doctors.find(doc => doc._id === doctorId) || null;
+      this.onDoctorSelected(doctorId);
     });
   }
 
-  onSubmit(): void {
-    if (this.appointmentForm.valid) {
-     
+  onDoctorSelected(doctorId: string): void {
+    this.selectedDoctor = this.doctors.find(doctor => doctor._id === doctorId) || null;
 
+    const timeControl = this.appointmentForm.get('appointmentTime');
+
+    console.log('Doctor selected:', { doctorId, selectedDoctor: this.selectedDoctor, timeControl: timeControl?.disabled });
+
+    if (this.selectedDoctor && timeControl) {
       
+      timeControl.enable();
+      timeControl.setValue('');
+      console.log('Time field enabled');
+    } else if (timeControl) {
+    
+      timeControl.disable();
+      timeControl.setValue('');
+      console.log('Time field disabled');
+    }
+  }
+
+ 
+  getDoctorAvailableHours(): string {
+    if (!this.selectedDoctor?.availability || this.selectedDoctor.availability.length === 0) {
+      return 'No availability set';
+    }
+
+    const availabilityText = this.selectedDoctor.availability
+      .map(slot => `${slot.day}: ${this.formatTime(slot.startTime)} – ${this.formatTime(slot.endTime)}`)
+      .join(', ');
+
+    return `Available: ${availabilityText}`;
+  }
+
+  
+  formatTime(time: string): string {
+    if (!time) return '';
+
+    const [hours, minutes] = time.split(':');
+    const hour = parseInt(hours, 10);
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    const displayHour = hour % 12 || 12;
+
+    return `${displayHour}:${minutes} ${ampm}`;
+  }
+
+  
+  isValidDate(): boolean {
+    const selectedDate = this.appointmentForm.get('appointmentDate')?.value;
+    if (!selectedDate) return true; 
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const selected = new Date(selectedDate);
+
+    return selected >= today;
+  }
+
+  
+  getMinDate(): string {
+    const today = new Date();
+    return today.toISOString().split('T')[0];
+  }
+
+  
+  getFieldError(fieldName: string): string | null {
+    const field = this.appointmentForm.get(fieldName);
+
+    if (!field || !field.errors || !field.touched) {
+      return null;
+    }
+
+    if (field.errors['required']) {
+      switch (fieldName) {
+        case 'doctor':
+          return 'Please select a doctor';
+        case 'appointmentDate':
+          return 'Please select an appointment date';
+        case 'appointmentTime':
+          return 'Please select an appointment time';
+        case 'reason':
+          return 'Please provide a reason for the appointment';
+        default:
+          return 'This field is required';
+      }
+    }
+
+    if (field.errors['maxlength']) {
+      const maxLength = field.errors['maxlength'].requiredLength;
+      return `Maximum ${maxLength} characters allowed`;
+    }
+
+    return null;
+  }
+
+  
+  hasFieldError(fieldName: string): boolean {
+    const field = this.appointmentForm.get(fieldName);
+    return !!(field && field.errors && field.touched);
+  }
+
+  
+  hasDateError(): boolean {
+    const dateField = this.appointmentForm.get('appointmentDate');
+    return !!(dateField && dateField.touched && dateField.value && !this.isValidDate());
+  }
+
+  
+  isFormValidForSubmission(): boolean {
+    const doctorControl = this.appointmentForm.get('doctor');
+    const dateControl = this.appointmentForm.get('appointmentDate');
+    const timeControl = this.appointmentForm.get('appointmentTime');
+    const reasonControl = this.appointmentForm.get('reason');
+
+    const doctorValid = !!(doctorControl?.value);
+    const dateValid = !!(dateControl?.value) && this.isValidDate();
+    const reasonValid = !!(reasonControl?.value);
+
+   
+    const timeValid = timeControl?.disabled ? true : !!(timeControl?.value);
+
+    
+    if (!doctorValid) {
+      return false;
+    }
+
+    return doctorValid && dateValid && timeValid && reasonValid;
+  }
+
+  onSubmit(): void {
+    
+    this.markFormGroupTouched(this.appointmentForm);
+
+   
+    const formValue = this.appointmentForm.getRawValue();
+
+    const doctorValid = !!(formValue.doctor);
+    const dateValid = !!(formValue.appointmentDate) && this.isValidDate();
+    const timeValid = !!(formValue.appointmentTime);
+    const reasonValid = !!(formValue.reason);
+
+    console.log('Form validation:', { doctorValid, dateValid, timeValid, reasonValid, formValue });
+
+    if (doctorValid && dateValid && timeValid && reasonValid) {
+      const appointmentDateTime = `${formValue.appointmentDate}T${formValue.appointmentTime}:00`;
+
+      const appointmentData = {
+        doctor: formValue.doctor,
+        date: appointmentDateTime,
+        reason: formValue.reason
+      };
+
+      console.log('Submitting appointment data:', appointmentData);
+
       this.loading = true;
       this.error = null;
       this.success = null;
 
-      this.appointmentService.createAppointment(this.appointmentForm.value).subscribe({
-        next: (appointment) => {
-        
+      this.appointmentService.createAppointment(appointmentData).subscribe({
+        next: (response) => {
           this.loading = false;
           this.success = 'Appointment booked successfully!';
 
-          
           this.snackBar.open('Appointment booked successfully!', 'Close', {
             duration: 5000,
             horizontalPosition: 'end',
@@ -116,13 +263,25 @@ export class AppointmentCreateComponent implements OnInit {
           setTimeout(() => this.router.navigate(['/appointments']), 2000);
         },
         error: (err) => {
-         
           this.loading = false;
-          this.error = err.error?.message || 'Failed to book appointment';
 
           
-          this.snackBar.open(this.error || 'Failed to book appointment', 'Close', {
-            duration: 5000,
+          let errorMessage = 'Failed to book appointment';
+          if (err.error?.error) {
+            if (err.error.error.includes('another appointment at this time') ||
+                err.error.error.includes('already has an appointment')) {
+              errorMessage = 'Doctor already has an appointment at that time. Please choose a different time slot.';
+            } else if (err.error.error.includes('not available')) {
+              errorMessage = 'Doctor is not available at the selected time. Please check the available hours and choose a different time.';
+            } else {
+              errorMessage = err.error.error;
+            }
+          }
+
+          this.error = errorMessage;
+
+          this.snackBar.open(errorMessage, 'Close', {
+            duration: 7000,
             horizontalPosition: 'end',
             verticalPosition: 'top',
             panelClass: ['error-snackbar']
@@ -131,13 +290,34 @@ export class AppointmentCreateComponent implements OnInit {
       });
     } else {
       
-      this.markFormGroupTouched(this.appointmentForm);
+      const missingFields: string[] = [];
 
-      this.error = 'Please fill all required fields correctly';
+      if (!doctorValid) {
+        missingFields.push('Select a doctor');
+      }
+      if (!dateValid) {
+        if (!formValue.appointmentDate) {
+          missingFields.push('Choose appointment date');
+        } else if (!this.isValidDate()) {
+          missingFields.push('Select a future date');
+        }
+      }
+      if (!timeValid) {
+        missingFields.push('Choose appointment time');
+      }
+      if (!reasonValid) {
+        missingFields.push('Provide reason for appointment');
+      }
 
-      
-      this.snackBar.open('Please fill all required fields correctly', 'Close', {
-        duration: 3000,
+      const errorMessage = missingFields.length > 0
+        ? `Please complete: ${missingFields.join(', ')}`
+        : 'Please fill all required fields correctly';
+
+      console.log('Validation failed:', { missingFields, errorMessage });
+
+      this.error = errorMessage;
+      this.snackBar.open(errorMessage, 'Close', {
+        duration: 5000,
         horizontalPosition: 'end',
         verticalPosition: 'top',
         panelClass: ['error-snackbar']
@@ -145,7 +325,7 @@ export class AppointmentCreateComponent implements OnInit {
     }
   }
 
-  
+
   private markFormGroupTouched(formGroup: FormGroup) {
     Object.values(formGroup.controls).forEach(control => {
       control.markAsTouched();

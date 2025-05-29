@@ -15,7 +15,7 @@ import { AuthService } from '../../auth.service';
 import { Patient } from '../../patient';
 import { Appointment } from '../../appointment';
 
-// Interface for appointment response
+
 interface AppointmentResponse {
   success: boolean;
   count?: number;
@@ -49,7 +49,7 @@ export class PatientDetailComponent implements OnInit {
   patientId: string | null = null;
   isDoctor: boolean = false;
 
-  // Table columns for appointments
+  
   readonly displayedColumns: string[] = ['date', 'reason', 'status'];
 
   constructor(
@@ -77,7 +77,7 @@ export class PatientDetailComponent implements OnInit {
     if (this.patientId) {
       this.loadPatientDetails();
 
-      // Only load appointments for doctors
+      
       if (this.isDoctor) {
         this.loadPatientAppointments();
       }
@@ -120,12 +120,12 @@ export class PatientDetailComponent implements OnInit {
   loadPatientAppointments(): void {
     if (!this.patientId) return;
 
-    // For doctors, we'll get all appointments and filter by patient
+    
     this.appointmentService.getAppointments().subscribe({
       next: (appointments: Appointment[]) => {
         console.log('Patient appointments response:', appointments);
 
-        // Filter appointments for this specific patient
+       
         this.appointments = appointments.filter(
           (appointment: Appointment) => appointment.patient._id === this.patientId
         );
@@ -156,7 +156,7 @@ export class PatientDetailComponent implements OnInit {
     }
   }
 
-  // Method to retry loading patient details
+ 
   retryLoadPatientDetails(): void {
     this.error = null;
     this.loadPatientDetails();

@@ -41,7 +41,7 @@ export class DoctorCreateComponent implements OnInit {
   success: string | null = null;
   loading = false;
 
-  // Available days and departments
+  
   availableDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   departments = [
     'Cardiology',
@@ -162,7 +162,7 @@ export class DoctorCreateComponent implements OnInit {
     });
   }
 
-  // Helper method to get availability display text
+  
   getAvailabilityDisplayText(index: number): string {
     const availability = this.availability.at(index);
     const day = availability.get('day')?.value;
@@ -175,7 +175,7 @@ export class DoctorCreateComponent implements OnInit {
     return '';
   }
 
-  // Check if availability entry is complete
+  
   isAvailabilityComplete(index: number): boolean {
     const availability = this.availability.at(index);
     return availability.get('day')?.value &&
@@ -183,7 +183,7 @@ export class DoctorCreateComponent implements OnInit {
            availability.get('endTime')?.value;
   }
 
-  // Navigate back to doctors list
+  
   navigateBack(): void {
     this.router.navigate(['/doctors']);
   }

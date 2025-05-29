@@ -14,6 +14,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 // Services
 import { AuthService } from '../../auth.service';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 interface Appointment {
   _id: string;
@@ -52,7 +53,7 @@ export class PatientDashboardHomeComponent implements OnInit {
 
   displayedColumns: string[] = ['doctor', 'date', 'reason', 'status', 'actions'];
 
-  private readonly API_BASE = 'http://localhost:5000/api';
+  private readonly API_BASE =`${environment.apiUrl}/api`;
 
   constructor(
     private authService: AuthService,

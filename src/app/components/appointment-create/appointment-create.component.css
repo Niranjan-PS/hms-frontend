@@ -15,12 +15,12 @@
 .appointment-card {
   width: 100%;
   border-radius: 12px;
-  /* CRITICAL: Change overflow to visible to allow dropdown to extend outside */
+
   overflow: visible !important;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
   background-color: white;
   transition: box-shadow 0.3s ease;
-  /* Remove transform transition that interferes with positioning */
+ 
 }
 
 .appointment-card:hover {
@@ -48,12 +48,12 @@ mat-card-subtitle {
 
 mat-card-content {
   padding: 0 24px 24px 24px;
-  /* CRITICAL: Ensure content area allows dropdown overflow */
+ 
   overflow: visible !important;
   position: relative;
 }
 
-/* Form styling */
+
 .full-width {
   width: 100%;
   margin-bottom: 16px;
@@ -63,7 +63,55 @@ mat-form-field {
   margin-bottom: 16px;
 }
 
-/* Availability section styling */
+
+mat-form-field.mat-form-field-disabled {
+  opacity: 0.6;
+}
+
+mat-form-field.mat-form-field-disabled .mat-form-field-label {
+  color: #999 !important;
+}
+
+mat-form-field.mat-form-field-disabled .mat-form-field-outline {
+  color: #ddd !important;
+}
+
+
+input[type="time"]:disabled {
+  background-color: #f5f5f5;
+  color: #999;
+  cursor: not-allowed;
+}
+
+
+input[type="date"] {
+  font-family: inherit;
+}
+
+
+.mat-form-field-invalid .mat-form-field-outline-thick {
+  color: #f44336 !important;
+}
+
+
+.mat-hint {
+  font-size: 12px;
+  line-height: 1.3;
+  color: #666;
+}
+
+
+.mat-form-field-disabled .mat-hint {
+  color: #999 !important;
+}
+
+
+.mat-error {
+  font-size: 12px;
+  line-height: 1.3;
+  margin-top: 4px;
+}
+
 .availability-section {
   background-color: #f5f9ff;
   border-radius: 8px;
@@ -72,16 +120,42 @@ mat-form-field {
   border-left: 4px solid #2196f3;
 }
 
+
+.doctor-availability-info {
+  margin: 16px 0 24px 0;
+}
+
+.availability-card {
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+  border: 1px solid #90caf9;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(33, 150, 243, 0.1);
+  overflow: visible !important;
+}
+
+.availability-card mat-card-content {
+  padding: 16px !important;
+}
+
 .availability-header {
   display: flex;
   align-items: center;
-  margin-bottom: 12px;
+  gap: 12px;
+  margin: 0;
   color: #1976d2;
 }
 
 .availability-header mat-icon {
-  margin-right: 8px;
   color: #1976d2;
+  font-size: 20px;
+}
+
+.availability-text {
+  color: #1565c0;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1.4;
+  margin: 0;
 }
 
 .availability-header h3 {
@@ -95,7 +169,7 @@ mat-list-item {
   margin-bottom: 8px;
 }
 
-/* Success and error messages */
+
 .success-message, .error-message {
   display: flex;
   align-items: center;
@@ -132,7 +206,7 @@ mat-list-item {
   }
 }
 
-/* Form actions */
+
 .form-actions {
   display: flex;
   justify-content: flex-end;
@@ -163,7 +237,7 @@ mat-list-item {
   color: #f44336;
 }
 
-/* Responsive adjustments */
+
 @media (max-width: 768px) {
   .appointment-create-container {
     padding: 16px;
@@ -183,13 +257,13 @@ mat-list-item {
   }
 }
 
-/* Accessibility improvements */
+
 :focus {
   outline: 2px solid #2196f3;
   outline-offset: 2px;
 }
 
-/* Animation for form elements */
+
 mat-form-field {
   animation: fadeIn 0.5s ease forwards;
   opacity: 0;
@@ -210,9 +284,6 @@ mat-form-field:nth-child(3) { animation-delay: 0.3s; }
   }
 }
 
-/* ===== COMPONENT-SPECIFIC FIXES ===== */
-
-/* Remove problematic transforms and ensure overflow visibility */
 .appointment-create-container {
   overflow: visible !important;
 }
@@ -222,7 +293,7 @@ mat-form-field:nth-child(3) { animation-delay: 0.3s; }
 }
 
 .appointment-card:hover {
-  /* Remove transform that interferes with dropdown positioning */
+  
   transform: none !important;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
 }
@@ -231,13 +302,13 @@ mat-card-content {
   overflow: visible !important;
 }
 
-/* Ensure proper spacing for form fields */
+
 .full-width {
   margin-bottom: 24px;
   overflow: visible !important;
 }
 
-/* Fix availability section positioning */
+
 .availability-section {
   margin-top: 16px;
   clear: both;

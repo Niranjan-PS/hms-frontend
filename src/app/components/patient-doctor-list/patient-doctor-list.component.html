@@ -1,6 +1,6 @@
 <div class="patient-doctors-container">
 
-  <!-- Back to Dashboard Button -->
+  
   <div class="back-to-dashboard-section">
     <button
       mat-flat-button
@@ -13,7 +13,6 @@
     </button>
   </div>
 
-  <!-- Header Section -->
   <mat-card class="header-card">
     <mat-card-header class="header-content">
       <div mat-card-avatar class="header-avatar">
@@ -35,13 +34,13 @@
     </mat-card-header>
   </mat-card>
 
-  <!-- Loading Spinner -->
+  
   <div *ngIf="loading" class="loading-container">
     <mat-spinner diameter="50"></mat-spinner>
     <p class="loading-text">Loading doctors...</p>
   </div>
 
-  <!-- Error Message -->
+  
   <mat-card *ngIf="error && !loading" class="error-card">
     <mat-card-content class="error-content">
       <mat-icon class="error-icon">error_outline</mat-icon>
@@ -53,13 +52,13 @@
     </mat-card-content>
   </mat-card>
 
-  <!-- Doctors Table -->
+  
   <mat-card class="table-card" *ngIf="!loading && !error">
     <mat-card-content class="table-content">
       <div class="table-container">
         <table mat-table [dataSource]="doctors" class="doctors-table mat-elevation-z2">
 
-          <!-- Name Column -->
+         
           <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef class="header-cell">
               <mat-icon class="column-icon">person</mat-icon>
@@ -78,7 +77,7 @@
             </td>
           </ng-container>
 
-          <!-- Department Column -->
+         
           <ng-container matColumnDef="department">
             <th mat-header-cell *matHeaderCellDef class="header-cell">
               <mat-icon class="column-icon">business</mat-icon>
@@ -92,7 +91,7 @@
             </td>
           </ng-container>
 
-          <!-- Availability Column -->
+          
           <ng-container matColumnDef="availability">
             <th mat-header-cell *matHeaderCellDef class="header-cell">
               <mat-icon class="column-icon">schedule</mat-icon>
@@ -112,7 +111,7 @@
                   <span class="no-availability">No availability set</span>
                 </ng-template>
 
-                <!-- Book Appointment Button -->
+                
                 <div class="appointment-action" *ngIf="hasAvailability(doctor)">
                   <button
                     mat-raised-button
@@ -127,11 +126,11 @@
             </td>
           </ng-container>
 
-          <!-- Table Headers and Rows -->
+          
           <tr mat-header-row *matHeaderRowDef="displayedColumns" class="header-row"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="data-row"></tr>
 
-          <!-- No Data Row -->
+         
           <tr class="mat-row no-data-row" *matNoDataRow>
             <td class="mat-cell no-data-cell" [attr.colspan]="displayedColumns.length">
               <div class="no-data-content">
@@ -154,7 +153,7 @@
     </mat-card-content>
   </mat-card>
 
-  <!-- Statistics Card -->
+ 
   <mat-card class="stats-card" *ngIf="!loading && !error && getTotalDoctorsCount() > 0">
     <mat-card-content class="stats-content">
       <div class="stat-item">
@@ -187,7 +186,7 @@
     </mat-card-content>
   </mat-card>
 
-  <!-- Help Section -->
+
   <mat-card class="help-card" *ngIf="!loading && !error">
     <mat-card-content class="help-content">
       <div class="help-info">

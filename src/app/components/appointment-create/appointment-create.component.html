@@ -7,26 +7,26 @@
     </mat-card-header>
 
     <mat-card-content>
-      <!-- Loading indicator -->
+     
       <div *ngIf="loading" class="loading-container">
         <mat-spinner diameter="40"></mat-spinner>
         <p>Loading...</p>
       </div>
 
-      <!-- Success message -->
+      
       <div *ngIf="success" class="success-message">
         <mat-icon>check_circle</mat-icon>
         <span>{{ success }}</span>
       </div>
 
-      <!-- Error message -->
+      
       <div *ngIf="error" class="error-message">
         <mat-icon>error</mat-icon>
         <span>{{ error }}</span>
       </div>
 
       <form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()" *ngIf="!loading || doctors.length > 0">
-        <!-- Doctor Selection -->
+        
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Select Doctor</mat-label>
           <mat-select
@@ -40,12 +40,12 @@
             </mat-option>
           </mat-select>
           <mat-icon matPrefix>person</mat-icon>
-          <mat-error *ngIf="appointmentForm.get('doctor')?.invalid && appointmentForm.get('doctor')?.touched">
-            Please select a doctor
+          <mat-error *ngIf="hasFieldError('doctor')">
+            {{ getFieldError('doctor') }}
           </mat-error>
         </mat-form-field>
 
-        <!-- Doctor Availability Information -->
+        
         <div *ngIf="selectedDoctor && selectedDoctor.availability && selectedDoctor.availability.length > 0"
              class="availability-section">
           <div class="availability-header">
@@ -61,33 +61,67 @@
           </mat-list>
         </div>
 
-        <!-- Date and Time Selection -->
+       
+        <div *ngIf="selectedDoctor" class="doctor-availability-info">
+          <mat-card class="availability-card">
+            <mat-card-content>
+              <div class="availability-header">
+                <mat-icon>schedule</mat-icon>
+                <span class="availability-text">{{ getDoctorAvailableHours() }}</span>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+       
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Appointment Date & Time</mat-label>
-          <input matInput formControlName="date" type="datetime-local" required>
-          <mat-icon matPrefix>event</mat-icon>
-          <mat-hint>Please select a date and time within doctor's availability</mat-hint>
-          <mat-error *ngIf="appointmentForm.get('date')?.invalid && appointmentForm.get('date')?.touched">
-            Date and time are required
+          <mat-label>Appointment Date</mat-label>
+          <input matInput
+                 formControlName="appointmentDate"
+                 type="date"
+                 [min]="getMinDate()"
+                 required>
+          <mat-icon matPrefix>calendar_today</mat-icon>
+          <mat-hint>Select your preferred appointment date</mat-hint>
+          <mat-error *ngIf="hasFieldError('appointmentDate')">
+            {{ getFieldError('appointmentDate') }}
+          </mat-error>
+          <mat-error *ngIf="hasDateError()">
+            Please select a future date
           </mat-error>
         </mat-form-field>
 
-        <!-- Reason for Appointment -->
+        
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Appointment Time</mat-label>
+          <input matInput
+                 formControlName="appointmentTime"
+                 type="time"
+                 required>
+          <mat-icon matPrefix>access_time</mat-icon>
+          <mat-hint *ngIf="selectedDoctor">{{ getDoctorAvailableHours() }}</mat-hint>
+          <mat-hint *ngIf="!selectedDoctor">Please select a doctor first</mat-hint>
+          <mat-error *ngIf="hasFieldError('appointmentTime')">
+            {{ getFieldError('appointmentTime') }}
+          </mat-error>
+        </mat-form-field>
+
+       
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Reason for Appointment</mat-label>
           <textarea matInput formControlName="reason" rows="4" required
                     placeholder="Please describe your symptoms or reason for visit"></textarea>
           <mat-icon matPrefix>description</mat-icon>
           <mat-hint align="end">{{appointmentForm.get('reason')?.value?.length || 0}}/500</mat-hint>
-          <mat-error *ngIf="appointmentForm.get('reason')?.invalid && appointmentForm.get('reason')?.touched">
-            Please provide a reason for your appointment
+          <mat-error *ngIf="hasFieldError('reason')">
+            {{ getFieldError('reason') }}
           </mat-error>
         </mat-form-field>
 
-        <!-- Submit Button -->
+        
         <div class="form-actions">
           <button mat-raised-button color="primary" type="submit"
-                  [disabled]="appointmentForm.invalid || loading" class="submit-button">
+                  [disabled]="loading" class="submit-button">
             <mat-icon *ngIf="!loading">calendar_today</mat-icon>
             <mat-spinner *ngIf="loading" diameter="20" class="button-spinner"></mat-spinner>
             {{ loading ? 'Booking...' : 'Book Appointment' }}
