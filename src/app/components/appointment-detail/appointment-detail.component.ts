@@ -89,7 +89,7 @@ export class AppointmentDetailComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        
+
         this.error = 'Failed to load appointment';
         this.loading = false;
 
@@ -120,14 +120,23 @@ export class AppointmentDetailComponent implements OnInit {
 
     const updates = this.appointmentForm.value;
 
-    
-    if (this.isPatient && updates.status && updates.status !== 'cancelled') {
+    // Prevent patients from changing status to anything other than cancelled
+    // But allow them to update other fields (date, time, reason) without status change
+    if (this.isPatient && updates.status && updates.status !== this.appointment?.status && updates.status !== 'cancelled') {
       this.error = 'Patients can only cancel appointments';
       this.showErrorSnackbar('Patients can only cancel appointments');
       return;
     }
 
-    
+    // For patients, always remove status from updates unless they're explicitly cancelling
+    // This prevents the backend restriction from being triggered
+    if (this.isPatient) {
+      if (updates.status !== 'cancelled') {
+        delete updates.status;
+      }
+    }
+
+
     if (!updates.date || !updates.reason) {
       this.error = 'Date and reason are required';
       this.showErrorSnackbar('Date and reason are required');
@@ -138,11 +147,11 @@ export class AppointmentDetailComponent implements OnInit {
     this.error = null;
     this.success = null;
 
-    
+
 
     this.appointmentService.updateAppointment(this.appointment._id, updates).subscribe({
       next: (updatedAppointment: Appointment) => {
-       
+
         this.appointment = updatedAppointment;
         this.success = 'Appointment updated successfully!';
         this.loading = false;
@@ -151,7 +160,7 @@ export class AppointmentDetailComponent implements OnInit {
         setTimeout(() => this.router.navigate(['/appointments']), 2000);
       },
       error: (err: any) => {
-       
+
         this.error = err.message || 'Failed to update appointment';
         this.loading = false;
 
